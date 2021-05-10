@@ -24,6 +24,7 @@
         //include_once './views/pages/remember.php';
 
         //main/posts page
+        $db = json_decode(file_get_contents('./config/db.json'), true);
         include_once './views/pages/posts.php';
 
         //post page
