@@ -52,9 +52,6 @@ class PostMapper extends Mapper
             //echo 1;
             return $this->mapFieldsToPost($posts);
         }
-        /*if(!empty($this->connection->db['post'])) {
-            $this->mapFieldsToPost($this->connection->db['post']);
-        }*/
     }
 
     /**

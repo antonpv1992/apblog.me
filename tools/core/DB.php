@@ -8,14 +8,14 @@ class DB
 {
     /** @var mixed db json file */
     private $db;
-    /** @var DB object instance */
-    private static DB $instance;
+    /** @var .object instance */
+    private static $instance;
 
     /**
      * creation / receiving object instance
-     * @return DB object instance
+     * @return .object instance
      */
-    public static function instance(): DB
+    public static function instance()
     {
         if(self::$instance === null){
             self::$instance = new self();
