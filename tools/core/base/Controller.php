@@ -18,6 +18,10 @@ abstract class Controller
     /** @var array user data */
     protected $userData = [];
 
+    /**
+     * Controller constructor.
+     * @param array $route
+     */
     public function __construct(array $route)
     {
         $this->route = $route;
@@ -35,9 +39,9 @@ abstract class Controller
 
     /**
      * method for forwarding data
-     * @param $userData
+     * @param array $userData data
      */
-    public function set($userData)
+    public function set(array $userData)
     {
         $this->userData = $userData;
     }
