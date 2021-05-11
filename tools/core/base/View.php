@@ -12,16 +12,16 @@ class View
     /** @var bool|string current view */
     public $view;
 
-    /** @var bool|string current layout */
+    /** @var bool|string|null current layout */
     public $layout;
 
     /**
      * View constructor.
      * @param array $route
-     * @param bool|string $layout
+     * @param bool|string|null $layout
      * @param bool|string $view
      */
-    public function __construct(array $route, bool|string $layout = '', bool|string $view = '')
+    public function __construct(array $route, bool|string|null $layout = '', bool|string $view = '')
     {
         $this->route = $route;
         if($layout === false){
