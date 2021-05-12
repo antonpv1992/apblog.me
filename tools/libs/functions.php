@@ -107,3 +107,46 @@ function aliasCollision(string $alias)
     };
     return implode("-", $array);
 }
+
+/**
+ * @param $data
+ * @return string
+ */
+function generateFields($data)
+{
+    $str = '';
+    foreach($data as $key => $value) {
+        $str .= $key . ', ';
+    }
+    return substr($str, 0, -2);
+}
+
+/**
+ * @param $data
+ * @return string[]
+ */
+function getFieldsAndKeys($data)
+{
+    $arr = ['fields' => "", 'keys' => ""];
+    foreach ($data as $key => $value) {
+        $arr['fields'] .= $key . ", ";
+        $arr['keys'] .= ":" . $key . ", ";
+    }
+    $arr['fields'] = substr(rtrim($arr['fields']), 0, -1);
+    $arr['keys'] = substr(rtrim($arr['keys']), 0, -1);
+    return $arr;
+}
+
+/**
+ * @param $data
+ * @return string
+ */
+function setFieldsAndKeys($data)
+{
+    $str = '';
+    foreach($data as $key => $value){
+        $str .= "$key = :$key, ";
+    }
+    $str = substr(rtrim($str), 0, -1);
+    return $str;
+}

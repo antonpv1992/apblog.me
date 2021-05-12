@@ -6,11 +6,29 @@ namespace app\controllers;
 
 class PostsController extends AppController
 {
+    /**
+     *
+     */
     public function indexAction()
     {
-        $title = 'Posts';
-        $posts = new \tools\core\mappers\PostMapper(\tools\core\Db::instance());
         $users = new \tools\core\mappers\UserMapper(\tools\core\Db::instance());
-        $this->set(compact('title', 'posts', 'users' ));
+        $posts = new \tools\core\mappers\PostMapper(\tools\core\Db::instance());
+        if($this->isLike($_POST, 'post, author, user, res')){
+            $this->likeClick($users, $posts);
+        }
+        $title = 'Posts';
+        $query = explode('/',trim(explode('?', $_SERVER["REQUEST_URI"])[0], '/'));
+        $theme = $this->searchTheme($query);
+        $total = $theme !== false ? $posts->countRecords($theme) : $posts->countRecords();
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $perpage = 1;
+        $pagination = new \tools\core\Pagination($page, $perpage, $total);
+        $start = $pagination->getStart();
+        $currentId = isset($_SESSION['user']) ? $_SESSION['user']['id'] : 0;
+        $articles = $posts->getArticles("post.id, post.title, post.description, post.date, post.image, post.short_text, post.theme, post.likes, post.comments, post.alias, user.login as author, user.avatar, user.id as uid, activity.liked, activity.commented", $currentId, $theme, "post.date DESC", "$start, $perpage");
+        $populars = $posts->getArticles("post.title, post.date, post.image, post.alias, user.login as author, user.avatar", false, false, "post.likes DESC", 5);
+        $liked = $posts->getArticles("post.title, post.date, post.image, post.alias, activity.liked", $currentId, "activity.liked = 1", "post.date DESC", 5);
+        $authors = $users->getUsers('user.login, user.likes, user.avatar', "user.author=1", "user.likes DESC", 5);
+        $this->set(compact('title', 'articles', 'populars', 'liked', 'authors', 'pagination'));
     }
 }

@@ -1,19 +1,19 @@
 <nav class="header__links navigation">
   <ul class="navigation__list">
     <li class="navigation__item">
-      <a class="navigation__link" href="#">PHP</a>
+      <a class="navigation__link" href="/posts/php">PHP</a>
     </li>
     <li class="navigation__item">
-      <a class="navigation__link" href="#">JavaScript</a>
+      <a class="navigation__link" href="/posts/js">JavaScript</a>
     </li>
     <li class="navigation__item">
-      <a class="navigation__link" href="#">HTML</a>
+      <a class="navigation__link" href="/posts/html">HTML</a>
     </li>
     <li class="navigation__item">
-      <a class="navigation__link" href="#">CSS</a>
+      <a class="navigation__link" href="/posts/css">CSS</a>
     </li>
     <li class="navigation__item">
-      <a class="navigation__link" href="#">HW</a>
+      <a class="navigation__link" href="/home-work">HM</a>
     </li>
   </ul>
 </nav>

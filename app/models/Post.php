@@ -29,6 +29,15 @@ class Post extends AppModel
         $this->fields['theme'] = $data['theme'];
         $this->fields['likes'] = $data['likes'];
         $this->fields['comments'] = $data['comments'];
+        if(isset($data['alias'])){
+            $this->fields['alias'] = $data['alias'];
+        } else {
+            $alias = $data['title'];
+            do{
+                $alias = aliasCollision(generateAlias($alias));
+            }while('sql query');
+            $this->fields['alias'] = $alias;
+        }
         $this->fields['image'] = isset($data['image']) ? file_get_contents($data['image']) : file_get_contents('https://picsum.photos/755/306');
     }
 
@@ -80,9 +89,6 @@ class Post extends AppModel
         return $this->fields['short_text'];
     }
 
-    /**
-     * @return mixed
-     */
     public function getText()
     {
         return $this->fields['text'];

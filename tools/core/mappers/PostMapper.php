@@ -8,50 +8,45 @@ use tools\core\base\Mapper;
 
 class PostMapper extends Mapper
 {
-    /**
-     * @return array
-     */
-    public function topByPopular()
-    {
-        $posts = $this->storage->scheme('post');
-        if($posts !== null){
-            usort($posts, function($x, $y){
-                return $y['likes'] <=> $x['likes'];
-            });
-            if(count($posts) > 5){
-                array_splice($posts, 5, count($posts) - 4);
-            }
-            return $this->mapFieldsToPost($posts);
-        }
-    }
+    /** @var string  */
+    protected $table = 'post';
+
+    /** @var string  */
+    protected $key = 'id';
 
     /**
      * @return array
      */
-    public function topByLiked()
+    public function getAll()
     {
-        $posts = $this->storage->scheme('post');
-        if($posts !== null){
-            $likedArray = [];
-            for($i = 0, $j = 0; $i < count($posts) && $j < 5; $i++) {
-                if(!$posts[$i]['liked']){
-                    continue;
-                }
-                array_push($likedArray, $posts[$i]);
-                $j++;
-            }
-            return $this->mapFieldsToPost($likedArray);
-        }
+        return $this->fieldsToPost($this->storage->query("SELECT * from $this->table"));
     }
 
-    public function getPosts()
+    /**
+     * @param $value
+     * @param string $field
+     * @return \app\models\Post
+     */
+    public function getOne($value, $field = '')
     {
-        $posts = $this->storage->scheme('post');
-        //debug($posts);
-        if($posts !== null){
-            //echo 1;
-            return $this->mapFieldsToPost($posts);
-        }
+        return $this->fieldToPost($this->findOne($value, $field));
+    }
+
+    /**
+     * @param $fields
+     * @param false $userId
+     * @param false $condition
+     * @param false $order
+     * @param false $limit
+     * @return array
+     */
+    public function getArticles($fields, $userId = false, $condition = false, $order = false, $limit = false)
+    {
+        $userId = $userId !== false ? " LEFT JOIN activity ON post.id = activity.post AND $userId = activity.user" : ""; //" LEFT JOIN activity ON post.id = activity.post AND $userId = activity.user"
+        $condition = $condition !== false ? " WHERE " . $condition : "";
+        $limit = $limit !== false ? " LIMIT " . $limit : "";
+        $order = $order !== false ? " ORDER BY " . $order : "";
+        return $this->fieldsToPost($this->query("SELECT $fields FROM $this->table INNER JOIN user ON post.author = user.id $userId $condition $order $limit"));
     }
 
     /**
@@ -59,7 +54,7 @@ class PostMapper extends Mapper
      * @param bool $flag
      * @return \app\models\Post
      */
-    public function mapFieldToPost($data, $flag = true)
+    public function fieldToPost($data, $flag = true)
     {
         return \app\models\Post::rowFromData($data, $flag);
     }
@@ -69,7 +64,7 @@ class PostMapper extends Mapper
      * @param bool $flag
      * @return array
      */
-    public function mapFieldsToPost($data, $flag = true)
+    public function fieldsToPost($data, $flag = true)
     {
         return \app\models\Post::rowsFromData($data, $flag);
     }

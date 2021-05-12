@@ -7,7 +7,7 @@
     <ul class="header__menu-list">
       <li class="header__menu-search">
         <a class="fas fa-search-plus" href="#">Поиск</a>
-        <form class="header__menu-form" method="get" action="#">
+        <form class="header__menu-form" method="get" action="/posts/search">
           <input class="header__menu-input" type="text" name="query" placeholder="Поиск" />
         </form>
       </li>
