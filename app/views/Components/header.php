@@ -1,22 +1,32 @@
 <header class="header">
   <h1 class="header__title">
-    <a class="header__title-link" href="#">APBlog</a>
+    <a class="header__title-link" href="/">APBlog</a>
   </h1>
-  <?php include_once '../app/views/components/navigation.php' ?>
+    <?php include_once '../app/views/Components/navigation.php' ?>
   <nav class="header__menu">
     <ul class="header__menu-list">
       <li class="header__menu-search">
-        <a class="fas fa-search-plus" href="#">Поиск</a>
-        <form class="header__menu-form" method="get" action="/posts/search">
+        <a class="fas fa-search-plus">Поиск</a>
+        <form class="header__menu-form" method="post" action="/posts/search">
           <input class="header__menu-input" type="text" name="query" placeholder="Поиск" />
         </form>
       </li>
-      <li class="header__menu-item">
-        <a class="fas fa-user-tie" href="#">Профиль</a>
-      </li>
-      <li class="header__menu-item">
-        <a class="fas fa-user-plus" href="#">Войти</a>
-      </li>
+        <?php if(isset($_SESSION['user'])):?>
+          <li class="header__menu-item">
+            <a class="fas fa-user-tie" href="/profile">Профиль</a>
+          </li>
+        <?php
+        endif;
+        if(!isset($_SESSION['user'])):
+            ?>
+          <li class="header__menu-item">
+            <a class="fas fa-user-plus" href="/sign-in">Войти</a>
+          </li>
+        <?php else: ?>
+          <li class="header__menu-item">
+            <a class="fas fa-user-minus" href="/logout">Выйти</a>
+          </li>
+        <?php endif ?>
     </ul>
   </nav>
 </header>

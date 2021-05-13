@@ -15,6 +15,7 @@ class App
     public function __construct()
     {
         $query = trim(parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH), '/');
+        Registry::auth();
         Router::dispatch($query);
     }
 }
