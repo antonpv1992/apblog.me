@@ -95,4 +95,36 @@ class AppController extends Controller
         }
         exit();
     }
+
+    /**
+     *
+     */
+    protected function dataExists()
+    {
+        $umapper = new \tools\core\mappers\UserMapper(\tools\core\DB::instance());
+        $users = $umapper->getUsers("login, email");
+        $array = [];
+        foreach($users as $user){
+            array_push($array, $user->getAllFields());
+        }
+        $array = json_encode($array, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
+        echo $array;
+        exit();
+    }
+
+    /**
+     * @param $data
+     */
+    protected function registrationUser($data)
+    {
+        $umapper = new \tools\core\mappers\UserMapper(\tools\core\DB::instance());
+        $cmapper = new \tools\core\mappers\ContactMapper(\tools\core\DB::instance());
+        $user = new \app\models\User($data, false);
+        $umapper->save($user->getAllFields());
+        $seance = $umapper->getUser("id, login, email, password", "login='" . $user->getLogin() . "'");
+        $contact = new \app\models\Contact(['user' => $seance->getID()]);
+        $cmapper->save($contact->getAllFields());
+        $_SESSION['user'] = $seance->getAllFields();
+        setcookie("user", json_encode($seance->getAllFields(), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK), time() + (86400 * 7));
+    }
 }
