@@ -40,7 +40,7 @@ function redirect(bool|string $http = false): void
     }else {
         $redirect = $_SERVER['HTTP_REFERER'] ?? '/';
     }
-    header("Location:$redirect");
+    header("Location: $redirect");
     exit();
 }
 

@@ -22,11 +22,10 @@ class PostController extends AppController
         $title = "Single Post";
         $alias = explode('/',trim(explode('?', $_SERVER["REQUEST_URI"])[0], '/'));
         $currentId = isset($_SESSION['user']) ? $_SESSION['user']['id'] : 0;
-        if($posts->getArticles("post.id, post.title, post.description, post.date, post.image, post.text, post.theme, post.likes, post.comments, post.alias, user.login as author, user.avatar, user.id as uid, activity.liked, activity.commented", $currentId, "post.alias='" . end($alias) . "'", "post.date DESC")){
-            $post = $posts->getArticles("post.id, post.title, post.description, post.date, post.image, post.text, post.theme, post.likes, post.comments, post.alias, user.login as author, user.avatar, user.id as uid, activity.liked, activity.commented", $currentId, "post.alias='" . end($alias) . "'", "post.date DESC")[0];
-        } else {
+        if(!$posts->getArticles("post.id, post.title, post.description, post.date, post.image, post.text, post.theme, post.likes, post.comments, post.alias, user.login as author, user.avatar, user.id as uid, activity.liked, activity.commented", $currentId, "post.alias='" . end($alias) . "'", "post.date DESC")){
             redirect('/empty');
         }
+        $post = $posts->getArticles("post.id, post.title, post.description, post.date, post.image, post.text, post.theme, post.likes, post.comments, post.alias, user.login as author, user.avatar, user.id as uid, activity.liked, activity.commented", $currentId, "post.alias='" . end($alias) . "'", "post.date DESC")[0];
         $this->set(compact('title', 'post'));
     }
 }
