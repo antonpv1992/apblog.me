@@ -1,18 +1,22 @@
 <?php
 
-
 namespace app\controllers;
 
+use tools\core\Db;
+use tools\core\mappers\PostMapper;
+use tools\core\mappers\UserMapper;
+use tools\core\Pagination;
 
 class PostsController extends AppController
 {
+
     /**
-     *
+     * main page Posts
      */
-    public function indexAction()
+    public function indexAction(): void
     {
-        $users = new \tools\core\mappers\UserMapper(\tools\core\Db::instance());
-        $posts = new \tools\core\mappers\PostMapper(\tools\core\Db::instance());
+        $users = new UserMapper(Db::instance());
+        $posts = new PostMapper(Db::instance());
         if($this->isLike($_POST, 'post, author, user, res')){
             $this->likeClick($users, $posts);
         }
@@ -22,7 +26,7 @@ class PostsController extends AppController
         $total = $theme !== false ? $posts->countRecords($theme) : $posts->countRecords();
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $perpage = 1;
-        $pagination = new \tools\core\Pagination($page, $perpage, $total);
+        $pagination = new Pagination($page, $perpage, $total);
         $start = $pagination->getStart();
         $currentId = isset($_SESSION['user']) ? $_SESSION['user']['id'] : 0;
         $articles = $posts->getArticles("post.id, post.title, post.description, post.date, post.image, post.short_text, post.theme, post.likes, post.comments, post.alias, user.login as author, user.avatar, user.id as uid, activity.liked, activity.commented", $currentId, $theme, "post.date DESC", "$start, $perpage");

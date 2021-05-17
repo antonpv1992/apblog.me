@@ -1,17 +1,18 @@
 <?php
 
-
 namespace tools\core;
 
+use tools\core\mappers\UserMapper;
 
 class FormValidation
 {
 
     /**
-     * @param $fields
-     * @return array
+     * main method for validating registration form fields
+     * @param array $fields form fields
+     * @return array array of errors
      */
-    public static function validate($fields)
+    public static function validate(array $fields): array
     {
         $instance = new FormValidation();
         $errors = [];
@@ -53,13 +54,14 @@ class FormValidation
     }
 
     /**
-     * @param $fields
-     * @return string
+     * the main method for validating user login to the site
+     * @param array $fields form fields
+     * @return string error or empty string
      */
-    public static function entry($fields)
+    public static function entry(array $fields): string
     {
         $instance = new FormValidation();
-        $mapper = new \tools\core\mappers\UserMapper(\tools\core\Db::instance());
+        $mapper = new UserMapper(Db::instance());
         $user = $mapper->getOne($fields['login'], 'login');
         if(strtolower($fields['login']) === strtolower($user->getLogin()) && (password_verify($fields['password'], $user->getPassword()))){
             return '';
@@ -69,17 +71,16 @@ class FormValidation
     }
 
     /**
-     * @param $cookies
-     * @return bool
+     * method for user verification
+     * @param array $cookies data stored in cookies
+     * @return bool verification result
      */
-    public static function verify($cookies)
+    public static function verify(array $cookies): bool
     {
-        $umapper = new \tools\core\mappers\UserMapper(\tools\core\Db::instance());
+        $umapper = new UserMapper(Db::instance());
         $user = $umapper->getUser("id, login, email, password", "login='" . $cookies['login'] . "'");
-        foreach ($user->getAllFields() as $key => $value) {
-            if($key == 'password' && $cookies['password'] !== $value){
-                return false;
-            } else if($cookies[$key] != $value) {
+        foreach ($user->getAllFields() as $key => $value){
+            if($cookies[$key] != $value){
                 return false;
             }
         }
@@ -87,9 +88,10 @@ class FormValidation
     }
 
     /**
-     * @param $errors
+     * method for displaying errors to the user
+     * @param array $errors array of errors
      */
-    public static function printErrors($errors)
+    public static function printErrors(array $errors): void
     {
         foreach($errors as $error){
             echo $error;
@@ -97,10 +99,11 @@ class FormValidation
     }
 
     /**
-     * @param $field
-     * @return string
+     * method that checks for an empty field
+     * @param string $field
+     * @return string error or empty string
      */
-    private function checkEmpty($field)
+    private function checkEmpty(string $field): string
     {
         if($field === ''){
             return $this->createError('Данное поле должно не должно быть пустым!');
@@ -109,35 +112,38 @@ class FormValidation
     }
 
     /**
-     * @param $login
-     * @return string
+     * method for checking login
+     * @param string $login
+     * @return string error or empty string
      */
-    private function checkLogin($login)
+    private function checkLogin(string $login): string
     {
         if(preg_match('/^[a-zA-zа-яА-Я_]{1}[a-zA-Z1-9а-яА-Я_-]{3,24}$/', $login) !== 1) {
             return $this->createError('Логин должен начинаться с буквы или знака подчеркивания и быть длиннее 3 и короче 26 символов');
-        }
-        return '';
+		}
+		return '';
     }
 
     /**
-     * @param $password
-     * @return string
+     * method for checking password
+     * @param string $password
+     * @return string error or empty string
      */
-    private function checkPassword($password)
+    private function checkPassword(string $password): string
     {
         if(preg_match_all('/(?=.*[0-9])(?=.*[a-z])[0-9!@#$%^&*a-zA-Z]{6,}/', $password) !== 1) {
             return $this->createError('Пароль должен содержать минимум одну букву и цифру, а так же быть не короче 6 символов');
-        }
-        return '';
+		}
+		return '';
     }
 
     /**
-     * @param $password
-     * @param $repeat
-     * @return string
+     * method for checking the correctness of the entered password in the second field
+     * @param string $password
+     * @param string $repeat
+     * @return string error or empty string
      */
-    private function checkRepeatPassword($password, $repeat)
+    private function checkRepeatPassword(string $password, string $repeat): string
     {
         if($password !== '' && $password !== $repeat) {
             return $this->createError('Пароли не совпадают');
@@ -146,10 +152,11 @@ class FormValidation
     }
 
     /**
-     * @param $email
-     * @return string
+     * method for checking email
+     * @param string $email
+     * @return string error or empty string
      */
-    private function checkEmail($email)
+    private function checkEmail(string $email): string
     {
         if(preg_match('/(?:[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/', $email) !== 1){
             return $this->createError('Неверный формат почты!');
@@ -158,10 +165,11 @@ class FormValidation
     }
 
     /**
-     * @param $phone
-     * @return string
+     * method for checking phone
+     * @param string $phone
+     * @return string error or empty string
      */
-    private function checkPhone($phone)
+    private function checkPhone(string $phone): string
     {
         if(preg_match('/((\+)?\b(8|38)?(0[\d]{2}))([\d-]{5,8})([\d]{2})/', $phone) !== 1 && $phone !== ''){
             return $this->createError('Неверный формат телефонного номера!');
@@ -170,10 +178,11 @@ class FormValidation
     }
 
     /**
-     * @param $input
-     * @return string
+     * method for checking text
+     * @param string $input
+     * @return string error or empty string
      */
-    private function checkText($input)
+    private function checkText(string $input): string
     {
         if(preg_match('/^[,.\'-а-яa-z]{2,}$/i', $input) !== 1 && $input !== ''){
             return $this->createError('Данное поле должно быть не короче 2-х символов и состоять из букв!');
@@ -182,22 +191,23 @@ class FormValidation
     }
 
     /**
-     * @param $text
-     * @return string
+     * method for generating html error
+     * @param string $text
+     * @return string error
      */
-    private function createError($text)
+    private function createError(string $text): string
     {
-        $p = "<p class='form-input__error'>$text</p>";
-        return $p;
+        return "<p class='form-input__error'>$text</p>";
     }
 
     /**
-     * @param $login
-     * @return string
+     * method to check if login exists
+     * @param string $login
+     * @return string error or empty string
      */
-    private function checklLoginExists($login)
+    private function checklLoginExists(string $login): string
     {
-        $mapper = new \tools\core\mappers\UserMapper(DB::instance());
+        $mapper = new UserMapper(DB::instance());
         if($mapper->isUserExists($login)){
             return $this->createError('Пользователь с таким логином уже существует!');
         }
@@ -205,12 +215,13 @@ class FormValidation
     }
 
     /**
-     * @param $email
-     * @return string
+     * method to check if email exists
+     * @param string $email
+     * @return string error or empty string
      */
-    private function checklEmailExists($email)
+    private function checklEmailExists(string $email): string
     {
-        $mapper = new \tools\core\mappers\UserMapper(DB::instance());
+        $mapper = new UserMapper(DB::instance());
         if($mapper->isEmailExists($email)){
             return $this->createError('Пользователь с такой почтой уже существует!');
         }

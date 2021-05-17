@@ -1,34 +1,31 @@
 <?php
 
-
 namespace tools\core;
 
-
-class DB
+class Db
 {
-    /** @var \PDO  */
-    protected $db;
+    /** @var \PDO storage variable*/
+    protected \PDO $db;
 
-    /** @var string  */
-    protected $scheme = "trainee_blog";
+    /** @var string scheme name */
+    protected string $scheme = "trainee_blog";
 
-    //** @var .object instance */
+    /** @var null instance db*/
     private static $instance;
 
     /**
-     * creation / receiving object instance
-     * @return .object instance
+     * @return Db
      */
-    public static function instance()
+    public static function instance(): Db
     {
         if(self::$instance === null){
-            self::$instance = new self;
+            self::$instance = new self();
         }
         return self::$instance;
     }
 
     /**
-     * DB constructor.
+     * Db constructor.
      */
     protected function __construct()
     {
@@ -41,45 +38,48 @@ class DB
     }
 
     /**
-     * @return string
+     * method for getting the last id written to the database
+     * @return string last id
      */
-    public function lastID()
+    public function lastID(): string
     {
         return $this->db->lastInsertId();
     }
 
     /**
-     * @param $sql
-     * @param array $params
+     * method for executing sql query
+     * @param string $sql query
+     * @param array $params parameters
      */
-    public function execute($sql, $params = [])
+    public function execute(string $sql, array $params = []): void
     {
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
     }
 
     /**
-     * @param $sql
-     * @param array $params
-     * @return bool
+     * method for checking for the existence of a field in the database
+     * @param string $sql query
+     * @param array $params parameters
+     * @return bool true if exists
      */
-    public function exists($sql, $params = [])
+    public function exists(string $sql, array $params = []): bool
     {
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
         if($stmt->fetch()) {
-            // exists
-            return true;//'существует!';
+            return true;
         }
-        return false;//'запихивай!';
+        return false;
     }
 
     /**
-     * @param $table
-     * @param $col
-     * @return int|mixed
+     * method for checking the existence of a column
+     * @param string $table table name
+     * @param string $col column name
+     * @return int|string number of coincidences
      */
-    public function colExists($table, $col)
+    public function colExists(string $table, string $col): int|string
     {
         $stmt = $this->db->prepare("SELECT count(*) FROM information_schema.COLUMNS WHERE COLUMN_NAME = '$col' AND TABLE_NAME = '$table' AND TABLE_SCHEMA = '$this->scheme'");
         $result = $stmt->execute();
@@ -90,11 +90,12 @@ class DB
     }
 
     /**
-     * @param $sql
-     * @param array $params
-     * @return array
+     * method for querying the database by query with parameters
+     * @param string $sql query
+     * @param array $params parameters
+     * @return array data
      */
-    public function query($sql, $params = [])
+    public function query(string $sql, array $params = []): array
     {
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($params);
@@ -105,11 +106,12 @@ class DB
     }
 
     /**
-     * @param $sql
-     * @param array $params
-     * @return array|mixed
+     * method for finding a column
+     * @param string $sql query
+     * @param array $params parameters
+     * @return array data
      */
-    public function queryCol($sql, $params = [])
+    public function queryCol(string $sql, array $params = []): array
     {
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($params);
@@ -120,10 +122,11 @@ class DB
     }
 
     /**
-     * @param $table
-     * @param $params
+     * method for saving data to database
+     * @param string $table table name
+     * @param array $params parameters
      */
-    public function save($table, $params)
+    public function save(string $table, array $params): void
     {
         $arr = getFieldsAndKeys($params);
         $sql = "INSERT INTO $table (" . $arr['fields'] . ") VALUES (" . $arr['keys'] . ")";
@@ -132,12 +135,13 @@ class DB
     }
 
     /**
-     * @param $table
-     * @param $params
-     * @param $param
-     * @param $field
+     * method for updating data in the database
+     * @param string $table table name
+     * @param string $params parameters
+     * @param string $param search parameter
+     * @param string $field search field
      */
-    public function update($table, $params, $param, $field)
+    public function update(string $table, string $params, string $param, string $field): void
     {
         $pairs = setFieldsAndKeys($params);
         $sql = "UPDATE $table SET $pairs WHERE $field = $param";
@@ -146,10 +150,11 @@ class DB
     }
 
     /**
-     * @param $table
-     * @param $params
+     * method for deleting data from the database
+     * @param string $table table name
+     * @param array $params parameters
      */
-    public function remove($table, $params)
+    public function remove(string $table, $params = []): void
     {
         $pairs = setFieldsAndKeys($params);
         $sql = "DELETE FROM $table WHERE $pairs";

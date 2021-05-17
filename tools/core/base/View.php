@@ -1,27 +1,26 @@
 <?php
 
-
 namespace tools\core\base;
-
 
 class View
 {
-    /** @var array current route and options (controller, action, params) */
-    public $route = [];
 
-    /** @var bool|string current view */
-    public $view;
+    /** @var array  */
+    public array $route = [];
 
-    /** @var bool|string|null current layout */
-    public $layout;
+    /** @var bool|string  */
+    public bool|string $view;
+
+    /** @var bool|string  */
+    public bool|string $layout;
 
     /**
      * View constructor.
-     * @param array $route
-     * @param bool|string|null $layout
-     * @param bool|string $view
+     * @param array $route current rout
+     * @param string $layout current layout
+     * @param string $view current view
      */
-    public function __construct(array $route, bool|string|null $layout = '', bool|string $view = '')
+    public function __construct(array $route, $layout = '', $view = '')
     {
         $this->route = $route;
         if($layout === false){
@@ -33,10 +32,10 @@ class View
     }
 
     /**
-     * method for display layout and view
-     * @param null|array $userData
+     * method for rendering data with current view and layout
+     * @param array|string $userData data
      */
-    public function render(array|null $userData)
+    public function render(array|string $userData): void
     {
         if(is_array($userData)) {
             extract($userData);
@@ -46,7 +45,7 @@ class View
         if(is_file($file_view)){
             require $file_view;
         } else{
-            echo "<p>Не найден вид <b>$file_view</b></p>";
+            redirect('/empty');
         }
         $content = ob_get_clean();
         if($this->layout !== false){
@@ -54,7 +53,7 @@ class View
             if(is_file($file_layout)){
                 require $file_layout;
             } else{
-                echo "<p>Не найден шаблон <b>$file_layout</b></p>";
+                redirect('/empty');
             }
         }
     }

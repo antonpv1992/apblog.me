@@ -1,127 +1,127 @@
 <?php
 
-
 namespace tools\core\base;
 
+use tools\core\Db;
 
 abstract class Mapper
 {
-    /** @var .data store */
-    protected $storage;
+    /** @var DB object*/
+    protected DB $storage;
 
-    /** @var  */
-    protected $table;
+    /** @var string current table*/
+    protected string $table;
 
-    /** @var string  */
-    protected $key = 'id';
+    /** @var string current key */
+    protected string $key = 'id';
 
     /**
      * Mapper constructor.
-     * @param $storage
+     * @param DB $storage
      */
-    public function __construct($storage)
+    public function __construct(DB $storage)
     {
         $this->storage = $storage;
     }
 
     /**
-     * @param $sql
-     * @param array $params
-     * @return mixed
+     * method for direct sql request
+     * @param string $sql query
+     * @param array $params request parameters
+     * @return array data from the database as an array
      */
-    public function query($sql, $params = []){
+    public function query(string $sql, array $params = []): array
+    {
         return $this->storage->query($sql, $params);
     }
 
     /**
-     * @param $field
-     * @param $value
-     * @return mixed
+     * method for direct sql request
+     * @param string $sql query
+     * @param array $params request parameters
      */
-    public function issExists($field, $value)
+    public function execute(string $sql, array $params = []): void
     {
-        return $this->storage->execute("SELECT $field FROM $this->table WHERE $field = ?", $value);
+        $this->storage->execute($sql, $params);
     }
 
     /**
-     * @param $fields
-     * @return mixed
+     * the method is needed to check for the existence of data in the database
+     * @param string $fields fields to be checked
+     * @return bool result
      */
-    public function isExists($fields)
+    public function isExists(string $fields): bool
     {
         return $this->storage->exists("SELECT * FROM $this->table WHERE $fields");
     }
 
     /**
-     * @param $col
-     * @return mixed
+     * method for checking if such a column exists in the database
+     * @param string $col column name
+     * @return int|mixed column or 0
      */
-    public function isCol($col)
+    public function isCol(string $col): int|null
     {
         return $this->storage->colExists($this->table, $col);
     }
 
     /**
-     * @param $data
+     * method for saving data to tables
+     * @param array $data data to save
      */
-    public function save($data)
+    public function save(array $data): void
     {
         $this->storage->save($this->table, $data);
     }
 
     /**
-     * @param $data
-     * @param $param
-     * @param false $key
+     * method for updating data in a table
+     * @param string $params parameters (fields) to update
+     * @param string|bool $condition conditions necessary for updating
      */
-    public function updat($data, $param, $key = false)
-    {
-        $key = $key !== false ? $key : $this->key;
-        $this->storage->update($this->table, $data, $param, $key);
-    }
-
-    /**
-     * @param $params
-     * @param false $condition
-     */
-    public function update($params, $condition = false)
+    public function update(string $params, string|bool $condition = false): void
     {
         $condition = $condition !== false ? "WHERE $condition" : "";
         $this->storage->query("UPDATE $this->table SET $params $condition");
     }
 
     /**
-     * @param false $condition
-     * @return mixed
+     * the method is needed to count the records in the table
+     * @param string|bool $condition conditions necessary for counting
+     * @return int|string number of records
      */
-    public function countRecords($condition = false)
+    public function countRecords(string|bool $condition = false): int|string
     {
         $condition = $condition !== false ? "WHERE $condition" : "";
         return $this->storage->query("SELECT COUNT(*) FROM $this->table $condition")[0]['COUNT(*)'] ;
     }
 
     /**
-     * @param $data
+     * method for deleting an entry from the database
+     * @param array $data data array
      */
-    public function delete($data)
+    public function delete(array $data): void
     {
         $this->storage->remove($this->table, $data);
     }
 
     /**
-     * @return mixed
+     * method to find all fields in a table
+     * @return array data array
      */
-    public function findAll(){
+    public function findAll(): array
+    {
         $sql = "SELECT * FROM {$this->table}";
         return $this->storage->query($sql);
     }
 
     /**
-     * @param $value
-     * @param string $field
-     * @return mixed
+     * method that returns one record from the database
+     * @param string $value search value
+     * @param string $field search field
+     * @return array data
      */
-    public function findOne($value, $field = '')
+    public function findOne(string $value, $field = ''): array
     {
         $field = $field ?: $this->key;
         $sql = "SELECT * FROM $this->table WHERE $field = ? LIMIT 1";
@@ -129,10 +129,11 @@ abstract class Mapper
     }
 
     /**
-     * @param $key
-     * @return mixed
+     * method for finding columns by title
+     * @param string $key column name
+     * @return array data
      */
-    public function findColls($key)
+    public function findColls(string $key): array
     {
         $key = $key ?: $this->key;
         $sql = "SELECT $key FROM $this->table";
@@ -140,11 +141,12 @@ abstract class Mapper
     }
 
     /**
-     * @param $key
-     * @param string $field
-     * @return mixed
+     * method for finding one column from the database
+     * @param string $key column name
+     * @param string $field search fields
+     * @return array data
      */
-    public function findOneColl($key, $field = '')
+    public function findOneColl(string $key, string $field = ''): array
     {
         $key = $key ?: $this->key;
         $sql = "SELECT $key FROM $this->table WHERE $field = ? LIMIT 1";
@@ -152,21 +154,25 @@ abstract class Mapper
     }
 
     /**
-     * @param $sql
-     * @param array $params
-     * @return mixed
+     * sql search
+     * @param string $sql query
+     * @param array $params parameters
+     * @return array data
      */
-    public function findBySql($sql, $params = []){
+    public function findBySql(string $sql, array $params = []): array
+    {
         return $this->storage->query($sql, $params);
     }
 
     /**
-     * @param $str
-     * @param $field
-     * @param string $table
-     * @return mixed
+     * method for searching by expression
+     * @param string $str substrings for search
+     * @param string $field search field
+     * @param string $table table name
+     * @return array data
      */
-    public function findLike($str, $field, $table = ''){
+    public function findLike(string $str, string $field, string $table = ''): array
+    {
         $table = $table ?: $this->table;
         $sql = "SELECT * FROM $table WHERE $field LIKE ?";
         return $this->storage->query($sql, ['%' . $str . '%']);

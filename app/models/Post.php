@@ -1,15 +1,18 @@
 <?php
 
-
 namespace app\models;
 
+use tools\core\Db;
+use tools\core\mappers\PostMapper;
 
 class Post extends AppModel
 {
+
     /**
-     * @param $data
+     * method for loading data from the database
+     * @param array $data data array
      */
-    protected function load($data)
+    protected function load(array $data): void
     {
         foreach($data as $key => $value){
             $this->fields[$key] = $value;
@@ -17,9 +20,10 @@ class Post extends AppModel
     }
 
     /**
-     * @param $data
+     * method for saving data to database
+     * @param array $data data array
      */
-    protected function save($data)
+    protected function save(array $data): void
     {
         $this->fields['title'] = $data['title'];
         $this->fields['description'] = $data['description'];
@@ -33,136 +37,156 @@ class Post extends AppModel
             $this->fields['alias'] = $data['alias'];
         } else {
             $alias = $data['title'];
+            $posts = new PostMapper(DB::instance());
             do{
                 $alias = aliasCollision(generateAlias($alias));
-            }while('sql query');
+            }while($posts->isPostExists($alias));
             $this->fields['alias'] = $alias;
         }
         $this->fields['image'] = isset($data['image']) ? file_get_contents($data['image']) : file_get_contents('https://picsum.photos/755/306');
     }
 
     /**
-     * @return mixed
+     * get the title of the class
+     * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->fields['title'];
     }
 
     /**
-     * @return mixed
+     * get the description of the class
+     * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->fields['description'];
     }
 
     /**
-     * @return mixed
+     * get the date of the class
+     * @return string
      */
-    public function getDate()
+    public function getDate(): string
     {
         return $this->fields['date'];
     }
 
     /**
-     * @return mixed
+     * get the author of the class
+     * @return string
      */
-    public function getAuthor()
+    public function getAuthor(): string
     {
         return $this->fields['author'];
     }
 
     /**
-     * @return mixed
+     * get the image of the class
+     * @return string
      */
-    public function getImage()
+    public function getImage(): string
     {
         return $this->fields['image'];
     }
 
     /**
-     * @return mixed
+     * get the short_text of the class
+     * @return string
      */
-    public function getShortText()
+    public function getShortText(): string
     {
         return $this->fields['short_text'];
     }
 
-    public function getText()
+    /**
+     * get the text of the class
+     * @return string
+     */
+    public function getText(): string
     {
         return $this->fields['text'];
     }
 
     /**
-     * @return mixed
+     * get the alias of the class
+     * @return string
      */
-    public function getAlias()
+    public function getAlias(): string
     {
         return $this->fields['alias'];
     }
 
     /**
-     * @return mixed
+     * get the theme of the class
+     * @return string
      */
-    public function getTheme()
+    public function getTheme(): string
     {
         return $this->fields['theme'];
     }
 
     /**
-     * @return mixed
+     * get the likes of the class
+     * @return int|string
      */
-    public function getLikes()
+    public function getLikes(): int|string
     {
         return $this->fields['likes'];
     }
 
     /**
-     * @return mixed
+     * get the comments of the class
+     * @return int|string
      */
-    public function getComments()
+    public function getComments(): int|string
     {
         return $this->fields['comments'];
     }
 
     /**
-     * @return mixed|string
+     * get the post id of the class
+     * @return string
      */
-    public function getId()
+    public function getId(): string
     {
-        return isset($this->fields['id']) ? $this->fields['id'] : '';
+        return $this->fields['id'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the avatar of the class
+     * @return string
      */
-    public function getAvatar()
+    public function getAvatar(): string
     {
-        return isset($this->fields['avatar']) ? $this->fields['avatar'] : '';
+        return $this->fields['avatar'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the liked of the class
+     * @return string|int
      */
-    public function isLiked()
+    public function isLiked(): string|int
     {
-        return isset($this->fields['liked']) ? $this->fields['liked'] : '';
+        return $this->fields['liked'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the commented of the class
+     * @return string|int
      */
-    public function isCommented()
+    public function isCommented(): string|int
     {
-        return isset($this->fields['commented']) ? $this->fields['commented'] : '';
+        return $this->fields['commented'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the user id of the class
+     * @return int|string
      */
-    public function getUid()
+    public function getUid(): int|string
     {
-        return isset($this->fields['uid']) ? $this->fields['uid'] : '';
+        return $this->fields['uid'] ?? '';
     }
 }

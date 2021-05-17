@@ -1,15 +1,16 @@
 <?php
 
-
 namespace app\controllers;
 
+use tools\core\FormValidation;
 
 class RegistrationController extends AppController
 {
+
     /**
-     *
+     *main page Registration
      */
-    public function indexAction()
+    public function indexAction(): void
     {
         if(isset($_SESSION['user'])){
             redirect('/');
@@ -24,7 +25,7 @@ class RegistrationController extends AppController
             foreach($_POST as $key => $value) {
                 $postData[$key] = hsc($value);
             }
-            $errors = \tools\core\FormValidation::validate($postData);
+            $errors = FormValidation::validate($postData);
             if(empty($errors)){
                 $this->registrationUser($postData);
                 redirect('/');

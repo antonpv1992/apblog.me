@@ -1,15 +1,14 @@
 <?php
-
-
 namespace app\models;
-
 
 class Activity extends AppModel
 {
+
     /**
-     * @param $data
+     * method for loading data from the database
+     * @param array $data data array
      */
-    protected function load($data)
+    protected function load(array $data): void
     {
         foreach($data as $key => $value){
             $this->fields[$key] = $value;
@@ -17,44 +16,49 @@ class Activity extends AppModel
     }
 
     /**
-     * @param $data
+     * method for saving data to database
+     * @param array $data data array
      */
-    protected function save($data)
+    protected function save(array $data): void
     {
         $this->fields['user'] = $data['user'];
         $this->fields['post'] = $data['post'];
-        $this->fields['liked'] = isset($data['liked']) ? $data['liked'] : false;
-        $this->fields['commented'] = isset($data['commented']) ? $data['commented'] : false;
+        $this->fields['liked'] = $data['liked'] ?? false;
+        $this->fields['commented'] = $data['commented'] ?? false;
     }
 
     /**
-     * @return mixed
+     * get the user of the class
+     * @return string|int
      */
-    public function getUser()
+    public function getUser(): string|int
     {
         return $this->fields['user'];
     }
 
     /**
-     * @return mixed
+     * get the post of the class
+     * @return string|int
      */
-    public function getPost()
+    public function getPost(): string|int
     {
         return $this->fields['post'];
     }
 
     /**
-     * @return mixed
+     * get the like of the class
+     * @return string|int
      */
-    public function isLiked()
+    public function isLiked(): string|int
     {
         return $this->fields['liked'];
     }
 
     /**
-     * @return mixed
+     * get the comment of the class
+     * @return string|int
      */
-    public function isCommented()
+    public function isCommented(): string|int
     {
         return $this->fields['commented'];
     }

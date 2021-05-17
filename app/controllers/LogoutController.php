@@ -1,21 +1,20 @@
 <?php
 
-
 namespace app\controllers;
-
 
 class LogoutController extends AppController
 {
-    /** @var bool  */
+
+    /** @var bool|string current layout */
     protected $layout = false;
 
-    /** @var bool  */
+    /** @var bool|string current view */
     protected $view = false;
 
     /**
-     *
+     * main action logout
      */
-    public function indexAction()
+    public function indexAction(): void
     {
         if(isset($_SESSION['user'])){
             unset($_SESSION['user']);

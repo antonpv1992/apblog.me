@@ -5,6 +5,6 @@
   include_once '../app/views/Components/profile_contacts.php';
   ?>
 </main>
-<?php
+<?php 
 include_once '../app/views/components/footer.php';
 ?>

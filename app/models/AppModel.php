@@ -8,22 +8,25 @@ use tools\core\base\Model;
 
 abstract class AppModel extends Model
 {
+
     /**
-     * @param array $data
-     * @param $flag
-     * @return static
+     * method for converting a string from db to object
+     * @param array $data data array
+     * @param bool $flag flag for loading / unloading data from database or fields
+     * @return static object
      */
-    public static function rowFromData(array $data, $flag)
+    public static function rowFromData(array $data, bool $flag): static
     {
         return empty($data) ? new static($data, $flag) : new static($data[0], $flag);
     }
 
     /**
-     * @param array $data
-     * @param $flag
-     * @return array
+     * method for converting a string from db to an array of objects
+     * @param array $data data array
+     * @param bool $flag flag for loading / unloading data from database or fields
+     * @return array array of objects
      */
-    public static function rowsFromData(array $data, $flag)
+    public static function rowsFromData(array $data, bool $flag): array
     {
         $objects = [];
         foreach ($data as $object) {

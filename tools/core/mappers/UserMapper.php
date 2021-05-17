@@ -2,78 +2,87 @@
 
 namespace tools\core\mappers;
 
+use app\models\User;
 use tools\core\base\Mapper;
 
 class UserMapper extends Mapper
 {
-    /** @var string  */
-    protected $table = 'user';
 
-    /** @var string  */
-    protected $key = 'id';
+    /** @var string table name */
+    protected string $table = 'user';
+
+    /** @var string key name */
+    protected string $key = 'id';
 
     /**
-     * @param $data
-     * @param bool $flag
-     * @return \app\models\User
+     * method for converting data from db to model data
+     * @param array $data data array
+     * @param bool $flag flag for loading / unloading data from database or fields
+     * @return User object
      */
-    public function fieldToUser($data, $flag = true)
+    public function fieldToUser(array $data, bool $flag = true): User
     {
-        return \app\models\User::rowFromData($data, $flag);
+        return User::rowFromData($data, $flag);
     }
 
     /**
-     * @param $data
-     * @param bool $flag
-     * @return array
+     * method for converting data from db to array data of models
+     * @param array $data data array
+     * @param bool $flag flag for loading / unloading data from database or fields
+     * @return array array of objects
      */
-    public function fieldsToUser($data, $flag = true)
+    public function fieldsToUser(array $data, bool $flag = true): array
     {
-        return \app\models\User::rowsFromData($data, $flag);
+        return User::rowsFromData($data, $flag);
     }
 
     /**
-     * @param $login
-     * @return mixed
+     * method that checks by login if the user exists
+     * @param string $login current login
+     * @return bool true if exists
      */
-    public function isUserExists($login)
+    public function isUserExists(string $login): bool
     {
         return $this->storage->exists("SELECT login FROM $this->table WHERE login = ?", [$login]);
     }
 
     /**
-     * @param $email
-     * @return mixed
+     * method that checks by email if the user exists
+     * @param string $email current email
+     * @return bool true if exists
      */
-    public function isEmailExists($email)
+    public function isEmailExists(string $email): bool
     {
         return $this->storage->exists("SELECT email FROM $this->table WHERE email = ?", [$email]);
     }
 
     /**
-     * @return array
+     * method to get all users
+     * @return array objects
      */
-    public function getAll()
+    public function getAll(): array
     {
         return $this->fieldsToUser($this->storage->query("SELECT * from $this->table"));
     }
 
     /**
-     * @param $value
-     * @param string $field
-     * @return \app\models\User
+     * method that returns one user by value
+     * @param string $value search value
+     * @param string $field value field
+     * @return User object
      */
-    public function getOne($value, $field = '')
+    public function getOne(string $value, string $field = ''): User
     {
         return $this->fieldToUser($this->findOne($value, $field));
     }
 
     /**
-     * @param false $fields
-     * @param false $condition
-     * @return \app\models\User
+     * method that returns the user by condition
+     * @param bool|string $fields fields
+     * @param bool|string $condition search term
+     * @return User object
      */
-    public function getUser($fields = false, $condition = false)
+    public function getUser(bool|string $fields = false, bool|string $condition = false): User
     {
         $fields = $fields !== false ? $fields : "*";
         $condition = $condition !== false ? " WHERE $condition" : "";
@@ -81,13 +90,14 @@ class UserMapper extends Mapper
     }
 
     /**
-     * @param $fields
-     * @param false $condition
-     * @param false $order
-     * @param false $limit
-     * @return array
+     * retrieving user data from several tables by condition
+     * @param string $fields fields
+     * @param bool|string $condition search term
+     * @param bool|string $order ordering conditions
+     * @param bool|string $limit field limit
+     * @return array objects
      */
-    public function getUsers($fields, $condition = false, $order = false, $limit = false)
+    public function getUsers(string $fields, bool|string $condition = false, bool|string $order = false, bool|string $limit = false): array
     {
         $condition = $condition !== false ? " WHERE " . $condition : "";
         $limit = $limit !== false ? " LIMIT " . $limit : "";
@@ -96,11 +106,12 @@ class UserMapper extends Mapper
     }
 
     /**
-     * @param $fields
-     * @param false $condition
-     * @return mixed
+     * method that updates the fields of the user's table
+     * @param string $fields fields
+     * @param bool|string $condition search term
+     * @return array objects
      */
-    public function updateUserField($fields, $condition = false)
+    public function updateUserField(string $fields, bool|string $condition = false): array
     {
         $condition = $condition !== false ? " WHERE " . $condition : "";
         return $this->query("UPDATE $this->table SET $fields $condition");

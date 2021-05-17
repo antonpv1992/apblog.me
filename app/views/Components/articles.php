@@ -1,6 +1,6 @@
 <main class="main">
-  <?php
-  if(!empty($articles)):
+  <?php 
+    if(!empty($articles)):
     foreach($articles as $article):
   ?>
   <article class="main__post post">
@@ -11,7 +11,7 @@
             <a class="post__title-link" href="/post/<?=$article->getAlias()?>" ><?=$article->getTitle()?></a>
           </h2>
           <p class="post__title-description">
-              <?=$article->getDescription()?>
+          <?=$article->getDescription()?>
           </p>
         </section>
         <section class="post__meta">
@@ -26,7 +26,7 @@
         <img class="post__image" src="data:image/png;base64,<?=base64_encode($article->getImage());?>" alt="Картинка">
       </a>
       <p class="post__descripton">
-          <?=$article->getShortText()?>
+        <?=$article->getShortText()?>
       </p>
       <footer class="post__footer">
         <a class="post__read" href="/post/<?=$article->getAlias()?>">
@@ -46,11 +46,11 @@
       </footer>
     </div>
   </article>
-<?php
-  endforeach;
-  else:
+  <?php 
+    endforeach;
+    else:
       echo '<p class="empty__post">Постов нет!</p>';
-  endif;
-  include_once '../app/views/Components/pagination.php'
-?>
+    endif;
+    include_once '../app/views/Components/pagination.php'
+  ?>
 </main>

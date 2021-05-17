@@ -1,13 +1,14 @@
 <?php
 
-
 namespace tools\core;
 
+//use app\models\user;
 
 class App
 {
-    /** @var self main app */
-    public static $app;
+
+    /** @var App attachment  */
+    public static App $app;
 
     /**
      * App constructor.

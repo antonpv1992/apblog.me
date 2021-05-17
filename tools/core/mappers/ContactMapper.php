@@ -1,45 +1,48 @@
 <?php
 
-
 namespace tools\core\mappers;
 
-
+use app\models\Contact;
 use tools\core\base\Mapper;
 
 class ContactMapper extends Mapper
 {
-    /** @var string  */
-    protected $table = 'contact';
 
-    /** @var string  */
-    protected $key = 'user';
+    /** @var string table name */
+    protected string $table = 'contact';
+
+    /** @var string key name */
+    protected string $key = 'user';
 
     /**
-     * @param $data
-     * @param $flag
-     * @return \app\models\User
+     * method for converting data from db to model data
+     * @param array $data data array
+     * @param bool $flag flag for loading / unloading data from database or fields
+     * @return Contact object
      */
-    public function fieldToContact($data, $flag)
+    public function fieldToContact(array $data, bool $flag): Contact
     {
-        return \app\models\User::rowFromData($data, $flag);
+        return Contact::rowFromData($data, $flag);
     }
 
     /**
-     * @param $data
-     * @param $flag
-     * @return array
+     * method for converting data from db to array data of models
+     * @param array $data data array
+     * @param bool $flag flag for loading / unloading data from database or fields
+     * @return array array of objects
      */
-    public function fieldsToContact($data, $flag)
+    public function fieldsToContact(array $data, bool $flag): array
     {
-        return \app\models\User::rowsFromData($data, $flag);
+        return Contact::rowsFromData($data, $flag);
     }
 
     /**
-     * @param $fields
-     * @param false $condition
-     * @return mixed
+     * method for updating contact information
+     * @param string $fields fields to update
+     * @param string|bool $condition renewal conditions
+     * @return array data
      */
-    public function updateContactField($fields, $condition = false)
+    public function updateContactField(string $fields, string|bool $condition = false): array
     {
         $condition = $condition !== false ? " WHERE " . $condition : "";
         return $this->query("UPDATE $this->table SET $fields $condition");

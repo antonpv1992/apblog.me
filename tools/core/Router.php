@@ -1,24 +1,22 @@
 <?php
 
-
 namespace tools\core;
-
 
 Class Router
 {
 
     /** @var array of routes */
-    protected static $routes = [];
+    protected static array $routes = [];
 
     /** @var array of current route and options (controller, action, params) */
-    protected static $route = [];
+    protected static array $route = [];
 
     /**
      * method adding a route to the route table
      * @param string $regexp route name regular expression
      * @param array $route current array of route options
      */
-    public static function add(string $regexp, array $route = [])
+    public static function add(string $regexp, array $route = []): void
     {
         self::$routes[$regexp] = $route;
     }
@@ -27,7 +25,7 @@ Class Router
      * method for getting an array of routes
      * @return array an array of routes
      */
-    public static function getRoutes()
+    public static function getRoutes(): array
     {
         return self::$routes;
     }
@@ -36,7 +34,7 @@ Class Router
      * method for getting a current route
      * @return array option an array of route
      */
-    public static function getRoute()
+    public static function getRoute(): array
     {
         return self::$route;
     }
@@ -46,7 +44,7 @@ Class Router
      * @param string $url query
      * @return bool is a route found
      */
-    public static function matchRoute(string $url)
+    public static function matchRoute(string $url): bool
     {
         foreach(self::$routes as $pattern => $route){
             if(preg_match("#$pattern#i", $url, $matches)){
@@ -61,9 +59,9 @@ Class Router
      * method generating the correct route
      * @param $routes array of routes
      * @param $route array of route
-     * @return mixed current route
+     * @return array current route
      */
-    private static function getCurrentRoute(array $routes, array $route)
+    private static function getCurrentRoute(array $routes, array $route): array
     {
         foreach($routes as $key => $value){
             if(is_string($key)){
@@ -81,7 +79,7 @@ Class Router
      * redirects the URL to the correct route
      * @param string $url query
      */
-    public static function dispatch(string $url)
+    public static function dispatch(string $url): void
     {
         if(self::matchRoute($url)){
             $controller = 'app\controllers\\' . self::$route['controller'] . 'Controller';
@@ -92,15 +90,13 @@ Class Router
                     $object->$action();
                     $object->getView();
                 } else{
-                    echo "Метод <b>$controller::$action</b> не найден";
+                    redirect('/empty');
                 }
             } else{
-                echo "Контроллер <b>$controller</b> не найден";
+                redirect('/empty');
             }
         } else{
-            http_response_code(404);
-            echo '404';
-            //include '404.html';
+            redirect('/empty');
         }
     }
 }

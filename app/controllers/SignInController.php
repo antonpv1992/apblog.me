@@ -1,15 +1,18 @@
 <?php
 
-
 namespace app\controllers;
 
+use tools\core\Db;
+use tools\core\FormValidation;
+use tools\core\mappers\UserMapper;
 
 class SignInController extends AppController
 {
+
     /**
-     *
+     * main page sign-in
      */
-    public function indexAction()
+    public function indexAction(): void
     {
         if(isset($_SESSION['user'])){
             redirect('/');
@@ -18,9 +21,9 @@ class SignInController extends AppController
         $error = '';
         if(!empty($_POST)){
             if(isset($_POST['login']) && isset($_POST['password'])){
-                $error = \tools\core\FormValidation::entry(['login' => hsc($_POST['login']), 'password' => hsc($_POST['password'])]);//['login' => 'Qwerty', 'password' => 'qwe123']
+                $error = FormValidation::entry(['login' => hsc($_POST['login']), 'password' => hsc($_POST['password'])]);//['login' => 'Qwerty', 'password' => 'qwe123']
                 if($error === ''){
-                    $umapper = new \tools\core\mappers\UserMapper(\tools\core\Db::instance());
+                    $umapper = new UserMapper(Db::instance());
                     $user = $umapper->getUser("id, login, email, password", "login='" . $_POST['login'] . "'");
                     $_SESSION['user'] = $user->getAllFields();
                     if(isset($_POST['remember'])) {
@@ -36,16 +39,16 @@ class SignInController extends AppController
     }
 
     /**
-     *
+     *remember page
      */
-    public function rememberAction()
+    public function rememberAction(): void
     {
         if(isset($_SESSION['user'])){
             redirect('/');
         }
         $title = 'Remember';
         $error = '';
-        $user = new \tools\core\mappers\UserMapper(\tools\core\Db::instance());
+        $user = new UserMapper(Db::instance());
         if(isset($_POST['forgot'])){
             if($user->isEmailExists(hsc($_POST['forgot']))){
                 $newPassword = generatePassword();

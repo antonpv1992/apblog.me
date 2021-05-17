@@ -1,13 +1,11 @@
 <?php
 
-
 namespace tools\core\base;
-
 
 abstract class Model
 {
-    /** @var array  */
-    protected array $fields = [];
+    /** @var array array of class fields */
+    protected array $fields;
 
     /**
      * Model constructor.
@@ -20,19 +18,22 @@ abstract class Model
     }
 
     /**
-     * @param $data
+     * method for loading data from the database
+     * @param array $data data array
      */
-    abstract protected function load($data);
+    abstract protected function load(array $data): void;
 
     /**
-     * @param $data
+     * method for saving data to database
+     * @param array $data data array
      */
-    abstract protected function save($data);
+    abstract protected function save(array $data): void;
 
     /**
-     * @return array
+     * method which returns all fields of the model
+     * @return array model fields
      */
-    public function getAllFields()
+    public function getAllFields(): array
     {
         return $this->fields;
     }

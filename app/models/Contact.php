@@ -1,16 +1,15 @@
 <?php
 
-
 namespace app\models;
-
 
 class Contact extends AppModel
 {
 
     /**
-     * @param $data
+     * method for loading data from the database
+     * @param array $data data array
      */
-    protected function load($data)
+    protected function load(array $data): void
     {
         foreach($data as $key => $value){
             $this->fields[$key] = $value;
@@ -18,134 +17,148 @@ class Contact extends AppModel
     }
 
     /**
-     * @param $data
+     * method for saving data to database
+     * @param array $data data array
      */
-    protected function save($data)
+    protected function save(array $data): void
     {
         $this->fields['user'] = $data['user'];
-        $this->fields['site'] = isset($data['site']) ? $data['site'] : '';
-        $this->fields['telegram'] = isset($data['telegram']) ? $data['telegram'] : '';
-        $this->fields['viber'] = isset($data['viber']) ? $data['viber'] : '';
-        $this->fields['whatsapp'] = isset($data['whatsapp']) ? $data['whatsapp'] : '';
-        $this->fields['signall'] = isset($data['signall']) ? $data['signall'] : '';
-        $this->fields['zoom'] = isset($data['zoom']) ? $data['zoom'] : '';
-        $this->fields['skype'] = isset($data['skype']) ? $data['skype'] : '';
-        $this->fields['facebook'] = isset($data['facebook']) ? $data['facebook'] : '';
-        $this->fields['twitter'] = isset($data['twitter']) ? $data['twitter'] : '';
-        $this->fields['vk'] = isset($data['vk']) ? $data['vk'] : '';
-        $this->fields['ok'] = isset($data['ok']) ? $data['ok'] : '';
-        $this->fields['instagram'] = isset($data['instagram']) ? $data['instagram'] : '';
-        $this->fields['youtube'] = isset($data['youtube']) ? $data['youtube'] : '';
+        $this->fields['site'] = $data['site'] ?? '';
+        $this->fields['telegram'] = $data['telegram'] ?? '';
+        $this->fields['viber'] = $data['viber'] ?? '';
+        $this->fields['whatsapp'] = $data['whatsapp'] ?? '';
+        $this->fields['signall'] = $data['signall'] ?? '';
+        $this->fields['zoom'] = $data['zoom'] ?? '';
+        $this->fields['skype'] = $data['skype'] ?? '';
+        $this->fields['facebook'] = $data['facebook'] ?? '';
+        $this->fields['twitter'] = $data['twitter'] ?? '';
+        $this->fields['vk'] = $data['vk'] ?? '';
+        $this->fields['ok'] = $data['ok'] ?? '';
+        $this->fields['instagram'] = $data['instagram'] ?? '';
+        $this->fields['youtube'] = $data['youtube'] ?? '';
     }
 
     /**
-     * @return mixed
+     * get the user of the class
+     * @return string|int
      */
-    public function getUser()
+    public function getUser(): string|int
     {
         return $this->fields['user'];
     }
 
     /**
-     * @return mixed
+     * get the site of the class
+     * @return string
      */
-    public function getSite()
+    public function getSite(): string
     {
         return $this->fields['site'];
     }
 
     /**
-     * @return mixed
+     * get the telegram of the class
+     * @return string
      */
-    public function getTelegram()
+    public function getTelegram(): string
     {
         return $this->fields['telegram'];
     }
 
     /**
-     * @return mixed
+     * get the viber of the class
+     * @return string
      */
-    public function getViber()
+    public function getViber(): string
     {
         return $this->fields['viber'];
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getWhatsapp()
+    public function getWhatsapp(): string
     {
         return $this->fields['whatsapp'];
     }
 
     /**
-     * @return mixed
+     * get the signal of the class
+     * @return string
      */
-    public function getSignal()
+    public function getSignal(): string
     {
         return $this->fields['signall'];
     }
 
     /**
-     * @return mixed
+     * get the zoom of the class
+     * @return string
      */
-    public function getZoom()
+    public function getZoom(): string
     {
         return $this->fields['zoom'];
     }
 
     /**
-     * @return mixed
+     * get the skype of the class
+     * @return string
      */
-    public function getSkype()
+    public function getSkype(): string
     {
         return $this->fields['skype'];
     }
 
     /**
-     * @return mixed
+     * get the facebook of the class
+     * @return string
      */
-    public function getFacebook()
+    public function getFacebook(): string
     {
         return $this->fields['facebook'];
     }
 
     /**
-     * @return mixed
+     * get the twitter of the class
+     * @return string
      */
-    public function getTwitter()
+    public function getTwitter(): string
     {
         return $this->fields['twitter'];
     }
 
     /**
-     * @return mixed
+     * get the vk of the class
+     * @return string
      */
-    public function getVk()
+    public function getVk(): string
     {
         return $this->fields['vk'];
     }
 
     /**
-     * @return mixed
+     * get the ok of the class
+     * @return string
      */
-    public function getOk()
+    public function getOk(): string
     {
         return $this->fields['ok'];
     }
 
     /**
-     * @return mixed
+     * get the instagram of the class
+     * @return string
      */
-    public function getInstagram()
+    public function getInstagram(): string
     {
         return $this->fields['instagram'];
     }
 
     /**
-     * @return mixed
+     * get the youtube of the class
+     * @return string
      */
-    public function getYoutube()
+    public function getYoutube(): string
     {
         return $this->fields['youtube'];
     }

@@ -12,8 +12,10 @@
     <li class="navigation__item">
       <a class="navigation__link" href="/posts/css">CSS</a>
     </li>
+    <?php if(isset($_SESSION['user'])): ?>
     <li class="navigation__item">
       <a class="navigation__link" href="/home-work">HM</a>
     </li>
+    <?php endif?>
   </ul>
 </nav>

@@ -1,46 +1,49 @@
 <?php
 
-
 namespace tools\core\mappers;
 
-
+use app\models\Post;
 use tools\core\base\Mapper;
 
 class PostMapper extends Mapper
 {
-    /** @var string  */
-    protected $table = 'post';
 
-    /** @var string  */
-    protected $key = 'id';
+    /** @var string table name */
+    protected string $table = 'post';
+
+    /** @var string key name */
+    protected string $key = 'id';
 
     /**
-     * @return array
+     * method for getting all posts
+     * @return array data
      */
-    public function getAll()
+    public function getAll(): array
     {
         return $this->fieldsToPost($this->storage->query("SELECT * from $this->table"));
     }
 
     /**
-     * @param $value
-     * @param string $field
-     * @return \app\models\Post
+     * method for getting one post
+     * @param string $value search value
+     * @param string $field value field
+     * @return Post object
      */
-    public function getOne($value, $field = '')
+    public function getOne(string $value, string $field = ''): Post
     {
         return $this->fieldToPost($this->findOne($value, $field));
     }
 
     /**
-     * @param $fields
-     * @param false $userId
-     * @param false $condition
-     * @param false $order
-     * @param false $limit
-     * @return array
+     * method for getting posts and data from two more tables that are associated with a post
+     * @param string $fields required fields
+     * @param bool|string $userId user id
+     * @param bool|string $condition search term
+     * @param bool|string $order sorting order
+     * @param bool|string $limit record limit
+     * @return array data
      */
-    public function getArticles($fields, $userId = false, $condition = false, $order = false, $limit = false)
+    public function getArticles(string $fields, bool|string $userId = false, bool|string $condition = false, bool|string $order = false, bool|string $limit = false): array
     {
         $userId = $userId !== false ? " LEFT JOIN activity ON post.id = activity.post AND $userId = activity.user" : ""; //" LEFT JOIN activity ON post.id = activity.post AND $userId = activity.user"
         $condition = $condition !== false ? " WHERE " . $condition : "";
@@ -50,22 +53,34 @@ class PostMapper extends Mapper
     }
 
     /**
-     * @param $data
-     * @param bool $flag
-     * @return \app\models\Post
+     * method that checks whether such a post exists by alias
+     * @param string $alias current alias for check
+     * @return bool true if post found
      */
-    public function fieldToPost($data, $flag = true)
+    public function isPostExists(string $alias): bool
     {
-        return \app\models\Post::rowFromData($data, $flag);
+        return $this->storage->exists("SELECT alias FROM $this->table WHERE alias = ?", [$alias]);
     }
 
     /**
-     * @param $data
-     * @param bool $flag
-     * @return array
+     * method for converting data from db to model data
+     * @param array $data data array
+     * @param bool $flag flag for loading / unloading data from database or fields
+     * @return Post object
      */
-    public function fieldsToPost($data, $flag = true)
+    public function fieldToPost(array $data, bool $flag = true): Post
     {
-        return \app\models\Post::rowsFromData($data, $flag);
+        return Post::rowFromData($data, $flag);
+    }
+
+    /**
+     * method for converting data from db to array data of models
+     * @param array $data data array
+     * @param bool $flag flag for loading / unloading data from database or fields
+     * @return array array of objects
+     */
+    public function fieldsToPost(array $data, bool $flag = true): array
+    {
+        return Post::rowsFromData($data, $flag);
     }
 }

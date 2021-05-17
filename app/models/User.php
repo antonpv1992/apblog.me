@@ -1,15 +1,15 @@
 <?php
 
-
 namespace app\models;
-
 
 class User extends AppModel
 {
+
     /**
-     * @param $data
+     * method for loading data from the database
+     * @param array $data data array
      */
-    protected function load($data)
+    protected function load(array $data): void
     {
         foreach($data as $key => $value){
             $this->fields[$key] = $value;
@@ -17,16 +17,17 @@ class User extends AppModel
     }
 
     /**
-     * @param $data
+     * method for saving data to database
+     * @param array $data data array
      */
-    protected function save($data)
+    protected function save(array $data): void
     {
         $this->fields['login'] = $data['login'];
         $this->fields['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         $this->fields['email'] = $data['email'];
         $this->fields['name'] = $data['name'];
         $this->fields['surname'] = $data['surname'];
-        $this->fields['birthday'] = $data['birthday'];
+        $this->fields['birthday'] = $data['birthday'] !== '' ? $data['birthday']: null;
         if(isset($data['man'])){
             $this->fields['sex'] = 'man';
         } else if(isset($data['woman'])){
@@ -37,224 +38,251 @@ class User extends AppModel
         $this->fields['country'] = $data['country'];
         $this->fields['city'] = $data['city'];
         $this->fields['phone'] = $data['phone'];
-        $this->fields['author'] = isset($data['author']) ? $data['author'] : 0;
-        $this->fields['likes'] = isset($data['likes']) ? $data['likes'] : 0;
+        $this->fields['author'] = $data['author'] ?? 0;
+        $this->fields['likes'] = $data['likes'] ?? 0;
         $this->fields['avatar'] = isset($data['avatar']) ? file_get_contents($data['avatar']) : file_get_contents("https://memchik.ru/images/mems/5ccaed65eab15.jpg");
     }
 
     /**
-     * @return mixed|string
+     * get the login of the class
+     * @return string
      */
-    public function getLogin()
+    public function getLogin(): string
     {
-        return isset($this->fields['login']) ? $this->fields['login'] : '';
+        return $this->fields['login'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the avatar of the class
+     * @return string
      */
-    public function getAvatar()
+    public function getAvatar(): string
     {
-        return isset($this->fields['avatar']) ? $this->fields['avatar'] : '';
+        return $this->fields['avatar'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get likes of the class
+     * @return int|string
      */
-    public function getLikes()
+    public function getLikes(): int|string
     {
-        return isset($this->fields['likes']) ? $this->fields['likes'] : '';
+        return $this->fields['likes'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the password of the class
+     * @return string
      */
-    public function getPassword()
+    public function getPassword(): string
     {
-        return isset($this->fields['password']) ? $this->fields['password'] : '';
+        return $this->fields['password'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the email of the class
+     * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
-        return isset($this->fields['email']) ? $this->fields['email'] : '';
+        return $this->fields['email'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the name of the class
+     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
-        return isset($this->fields['name']) ? $this->fields['name'] : '';
+        return $this->fields['name'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the surname of the class
+     * @return string
      */
-    public function getSurname()
+    public function getSurname(): string
     {
-        return isset($this->fields['surname']) ? $this->fields['surname'] : '';
+        return $this->fields['surname'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the birthday of the class
+     * @return string
      */
-    public function getBirthday()
+    public function getBirthday(): string
     {
-        return isset($this->fields['birthday']) ? $this->fields['birthday'] : '';
+        return $this->fields['birthday'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the sex of the class
+     * @return string
      */
-    public function getSex()
+    public function getSex(): string
     {
-        return isset($this->fields['sex']) ? $this->fields['sex'] : '';
+        return $this->fields['sex'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the country of the class
+     * @return string
      */
-    public function getCountry()
+    public function getCountry(): string
     {
-        return isset($this->fields['country']) ? $this->fields['country'] : '';
+        return $this->fields['country'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the city of the class
+     * @return string
      */
-    public function getCity()
+    public function getCity(): string
     {
-        return isset($this->fields['city']) ? $this->fields['city'] : '';
+        return $this->fields['city'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the phone of the class
+     * @return string
      */
-    public function getPhone()
+    public function getPhone(): string
     {
-        return isset($this->fields['phone']) ? $this->fields['phone'] : '';
+        return $this->fields['phone'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the author of the class
+     * @return string
      */
-    public function getAuthor()
+    public function getAuthor(): string
     {
-        return isset($this->fields['author']) ? $this->fields['author'] : '';
+        return $this->fields['author'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the id of the class
+     * @return int|string
      */
-    public function getID()
+    public function getID(): int|string
     {
-        return isset($this->fields['id']) ? $this->fields['id'] : '';
+        return $this->fields['id'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the site of the class
+     * @return string
      */
-    public function getSite()
+    public function getSite(): string
     {
-        return isset($this->fields['site']) ? $this->fields['site'] : '';
+        return $this->fields['site'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the telegram of the class
+     * @return string
      */
-    public function getTelegram()
+    public function getTelegram(): string
     {
-        return isset($this->fields['telegram']) ? $this->fields['telegram'] : '';
+        return $this->fields['telegram'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the viber of the class
+     * @return string
      */
-    public function getViber()
+    public function getViber(): string
     {
-        return isset($this->fields['viber']) ? $this->fields['viber'] : '';
+        return $this->fields['viber'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the whatsapp of the class
+     * @return string
      */
-    public function getWhatsapp()
+    public function getWhatsapp(): string
     {
-        return isset($this->fields['whatsapp']) ? $this->fields['whatsapp'] : '';
+        return $this->fields['whatsapp'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the signal of the class
+     * @return string
      */
-    public function getSignal()
+    public function getSignal(): string
     {
-        return isset($this->fields['signal']) ? $this->fields['signal'] : '';
+        return $this->fields['signall'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the zoom of the class
+     * @return string
      */
-    public function getZoom()
+    public function getZoom(): string
     {
-        return isset($this->fields['zoom']) ? $this->fields['zoom'] : '';
+        return $this->fields['zoom'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the skype of the class
+     * @return string
      */
-    public function getSkype()
+    public function getSkype(): string
     {
-        return isset($this->fields['skype']) ? $this->fields['skype'] : '';
+        return $this->fields['skype'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the facebook of the class
+     * @return string
      */
-    public function getFacebook()
+    public function getFacebook(): string
     {
-        return isset($this->fields['facebook']) ? $this->fields['facebook'] : '';
+        return $this->fields['facebook'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the twitter of the class
+     * @return string
      */
-    public function getTwitter()
+    public function getTwitter(): string
     {
-        return isset($this->fields['twitter']) ? $this->fields['twitter'] : '';
+        return $this->fields['twitter'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the vk of the class
+     * @return string
      */
     public function getVk()
     {
-        return isset($this->fields['vk']) ? $this->fields['vk'] : '';
+        return $this->fields['vk'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the ok of the class
+     * @return string
      */
-    public function getOk()
+    public function getOk(): string
     {
-        return isset($this->fields['ok']) ? $this->fields['ok'] : '';
+        return $this->fields['ok'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the instagram of the class
+     * @return string
      */
-    public function getInstagram()
+    public function getInstagram(): string
     {
-        return isset($this->fields['instagram']) ? $this->fields['instagram'] : '';
+        return $this->fields['instagram'] ?? '';
     }
 
     /**
-     * @return mixed|string
+     * get the youtube of the class
+     * @return string
      */
-    public function getYoutube()
+    public function getYoutube(): string
     {
-        return isset($this->fields['youtube']) ? $this->fields['youtube'] : '';
+        return $this->fields['youtube'] ?? '';
     }
 }

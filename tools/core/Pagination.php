@@ -1,33 +1,33 @@
 <?php
 
-
 namespace tools\core;
-
 
 class Pagination
 {
-    /** @var float|int|mixed  */
-    public $currentPage;
 
-    /** @var  */
-    public $perpage;
+    /** @var int current field  */
+    public int $currentPage;
 
-    /** @var  */
-    public $total;
+    /** @var int number of posts per page */
+    public int $perpage;
 
-    /** @var float|int  */
-    public $countPages;
+    /** @var int total number of posts */
+    public int $total;
 
-    /** @var string  */
-    public $uri;
+    /** @var int total number of pages */
+    public int $countPages;
+
+    /** @var string link with correct get parameters */
+    public string $uri;
 
     /**
      * Pagination constructor.
-     * @param $page
-     * @param $perpage
-     * @param $total
+     * @param int $page current page
+     * @param int $perpage number of posts per page
+     * @param int $total total number of posts
      */
-    public function __construct($page, $perpage, $total){
+    public function __construct(int $page, int $perpage, int $total)
+    {
         $this->perpage = $perpage;
         $this->total = $total;
         $this->countPages = $this->getCountPages();
@@ -36,9 +36,11 @@ class Pagination
     }
 
     /**
-     * @return string
+     * method for displaying layout with pagination
+     * @return string html code
      */
-    public function display(){
+    public function display(): string
+    {
         $startpage = null;
         $endpage = null;
         $page2left = null;
@@ -47,7 +49,6 @@ class Pagination
         $page1right = null;
         $back = "<li class='pagination__item'><a href='{$this->uri}page=". ($this->currentPage - 1) . "' class='pagination__link'><i class='fas fa-angle-left'></i></a></li>";
         $forward = "<li class='pagination__item'><a href='{$this->uri}page=" . ($this->currentPage + 1) . "' class='pagination__link'><i class='fas fa-angle-right'></i></a></li>";
-
         if(($this->currentPage - 1) < 1){
             $back = "<li class='pagination__item'><a class='pagination__link'><i class='fas fa-angle-left'></i></a></li>";
         }
@@ -72,38 +73,45 @@ class Pagination
         if($this->currentPage + 3 <= $this->countPages){
             $page2right = "<li class='pagination__item'><a class='pagination__link pagination__link-dotts'><i class='fas fa-ellipsis-h'></i></a></li>";
         }
-
         return "<ul class='main__pagination pagination'> $back $startpage $page2left $page1left <li class='pagination__item'><a class='pagination__link pagination__link-active'>$this->currentPage</a></li> $page1right $page2right $endpage $forward";
     }
 
     /**
-     * @return float|int
+     * method for counting pages
+     * @return int number of pages
      */
-    public function getCountPages(){
+    public function getCountPages(): int
+    {
         return ceil($this->total / $this->perpage) ?: 1;
     }
 
     /**
-     * @param $page
-     * @return float|int|mixed
+     * method for getting the correct page
+     * @param int $page current page
+     * @return int correct page
      */
-    public function getCurrentPage($page){
+    public function getCurrentPage(int $page): int
+    {
         if(!$page || $page < 1) $page = 1;
         if($page > $this->countPages) $page = $this->countPages;
         return $page;
     }
 
     /**
-     * @return float|int
+     * method for determining the start
+     * @return int start page
      */
-    public function getStart(){
+    public function getStart(): int
+    {
         return ($this->currentPage - 1) * $this->perpage;
     }
 
     /**
-     * @return string
+     * method for displaying the get pagination parameter correctly
+     * @return string link with correct get parameters
      */
-    public function getParams(){
+    public function getParams(): string
+    {
         $url = $_SERVER['REQUEST_URI'];
         $url = explode('?', $url);
         $uri = $url[0] . '?';

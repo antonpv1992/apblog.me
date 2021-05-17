@@ -1,18 +1,21 @@
 <?php
 
-
 namespace app\controllers;
 
+use tools\core\Db;
+use tools\core\mappers\ContactMapper;
+use tools\core\mappers\UserMapper;
 
 class ProfileController extends AppController
 {
+
     /**
-     *
+     * main page Profile
      */
-    public function indexAction()
+    public function indexAction(): void
     {
-        $users = new \tools\core\mappers\UserMapper(\tools\core\Db::instance());
-        $contacts = new \tools\core\mappers\ContactMapper(\tools\core\Db::instance());
+        $users = new UserMapper(Db::instance());
+        $contacts = new ContactMapper(Db::instance());
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
             $this->changeUserData($users, $contacts);
         }
@@ -25,7 +28,7 @@ class ProfileController extends AppController
         } else if($users->isUserExists(end($alias))){
             $alias = end($alias);
         } else {
-            redirect('/');
+            redirect('/empty');
         }
         $user = $users->getUsers("*", "user.login='$alias'")[0];
         $this->set(compact('title', 'user', 'alias', 'isAuth'));
