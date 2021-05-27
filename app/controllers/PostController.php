@@ -2,9 +2,7 @@
 
 namespace app\controllers;
 
-use tools\core\Db;
-use tools\core\mappers\PostMapper;
-use tools\core\mappers\UserMapper;
+use app\models\Post;
 use tools\core\services\PostService;
 
 class PostController extends AppController
@@ -17,18 +15,17 @@ class PostController extends AppController
      */
     public function indexAction(): void
     {
-        $users = new UserMapper(Db::instance());
-        $posts = new PostMapper(Db::instance());
-        if($this->isLike($_POST, 'post, author, user, res')){
-            $this->likeClick($users, $posts);
+        $postObj = new Post([]);
+        if ($this->isLike($_POST, 'post, author, user, res')) {
+            $this->likeClick($postObj);
         }
         $title = "Single Post";
-        $alias = explode('/',trim(explode('?', $_SERVER["REQUEST_URI"])[0], '/'));
+        $alias = explode('/', trim(explode('?', $_SERVER["REQUEST_URI"])[0], '/'));
         $currentId = isset($_SESSION['user']) ? $_SESSION['user']['id'] : 0;
-        if(!$posts->getArticles("post.id, post.title, post.description, post.date, post.image, post.text, post.theme, post.likes, post.comments, post.alias, user.login as author, user.avatar, user.id as uid, activity.liked, activity.commented", $currentId, "post.alias='" . end($alias) . "'", "post.date DESC")){
+        if (!$postObj->postExists($currentId, end($alias))) {
             redirect('/empty');
         }
-        $post = $posts->getArticles("post.id, post.title, post.description, post.date, post.image, post.text, post.theme, post.likes, post.comments, post.alias, user.login as author, user.avatar, user.id as uid, activity.liked, activity.commented", $currentId, "post.alias='" . end($alias) . "'", "post.date DESC")[0];
+        $post = $postObj->getSinglePost($currentId, end($alias));
         $this->set(compact('title', 'post'));
     }
 }

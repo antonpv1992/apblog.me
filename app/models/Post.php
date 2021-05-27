@@ -4,9 +4,20 @@ namespace app\models;
 
 use tools\core\Db;
 use tools\core\mappers\PostMapper;
+use tools\core\mappers\UserMapper;
+use tools\core\mappers\ActivityMapper;
 
 class Post extends AppModel
 {
+
+    /** @var UserMapper storage mapper */
+    private UserMapper $uMapper;
+
+    /** @var PostMapper storage mapper */
+    private PostMapper $pMapper;
+
+    /** @var ActivityMapper storage mapper */
+    private ActivityMapper $aMapper;
 
     /**
      * method for loading data from the database
@@ -14,9 +25,12 @@ class Post extends AppModel
      */
     protected function load(array $data): void
     {
-        foreach($data as $key => $value){
+        foreach ($data as $key => $value) {
             $this->fields[$key] = $value;
         }
+        $this->uMapper = new UserMapper(Db::instance());
+        $this->pMapper = new PostMapper(Db::instance());
+        $this->aMapper = new ActivityMapper(Db::instance());
     }
 
     /**
@@ -33,17 +47,19 @@ class Post extends AppModel
         $this->fields['theme'] = $data['theme'];
         $this->fields['likes'] = $data['likes'];
         $this->fields['comments'] = $data['comments'];
-        if(isset($data['alias'])){
+        if (isset($data['alias'])) {
             $this->fields['alias'] = $data['alias'];
         } else {
             $alias = $data['title'];
-            $posts = new PostMapper(DB::instance());
-            do{
+            do {
                 $alias = aliasCollision(generateAlias($alias));
-            }while($posts->isPostExists($alias));
+            } while ($this->pMapper->isPostExists($alias));
             $this->fields['alias'] = $alias;
         }
         $this->fields['image'] = isset($data['image']) ? file_get_contents($data['image']) : file_get_contents('https://picsum.photos/755/306');
+        $this->uMapper = new UserMapper(Db::instance());
+        $this->pMapper = new PostMapper(Db::instance());
+        $this->aMapper = new ActivityMapper(Db::instance());
     }
 
     /**
@@ -188,5 +204,110 @@ class Post extends AppModel
     public function getUid(): int|string
     {
         return $this->fields['uid'] ?? '';
+    }
+
+    /**
+     * method for adding / removing a like to a post
+     * @param array $postArr post data
+     */
+    public function toggleLike(array $postArr): void
+    {
+        $like = 0;
+        if ($postArr['res'] === '1') {
+            $like = 1;
+            $this->uMapper->update("likes = likes + 1", "id=" .  $postArr['author']);
+            $this->pMapper->update("likes = likes + 1", "id=" .  $postArr['post']);
+        } else {
+            $this->uMapper->update("likes = likes - 1", "id=" .  $postArr['author']);
+            $this->pMapper->update("likes = likes - 1", "id=" .  $postArr['post']);
+        }
+        if ($this->aMapper->isExists("post=" . $postArr['post'] . " AND user=" . $postArr['user'] . "")) {
+            $this->aMapper->setActivity("liked=$like", "post=" . $postArr['post'] . " AND user=" . $postArr['user']);
+        } else {
+            $this->aMapper->addActivity(["post" => $postArr['post'],"user" => $postArr['user'] ,"liked" => 1]);
+        }
+    }
+
+    /**
+     * method that checks the existence of the post and the author
+     * @return bool true if post exists
+     */
+    public function postAndAuthorExists(): bool
+    {
+        if (
+            $this->uMapper->isExists("id='" . $_POST['user'] . "'")
+            && $this->pMapper->isExists("id='" . $_POST['post'] . "'")
+            && $this->uMapper->isExists("id='" . $_POST['author'] . "'")
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * the method checks if at least one post is returned from the database
+     * @param int $currentId current id
+     * @param string $alias alias
+     * @return bool true if post exists
+     */
+    public function postExists(int $currentId, string $alias): bool
+    {
+        if ($this->pMapper->getArticles("post.id, post.title, post.description, post.date, post.image, post.text, post.theme, post.likes, post.comments, post.alias, user.login as author, user.avatar, user.id as uid, activity.liked, activity.commented", $currentId, "post.alias='" . $alias . "'", "post.date DESC")) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * method that returns one post by alias
+     * @param int $currentId current id
+     * @param string $alias alias
+     * @return Post one post
+     */
+    public function getSinglePost(int $currentId, string $alias): Post
+    {
+        return $this->pMapper->getArticles("post.id, post.title, post.description, post.date, post.image, post.text, post.theme, post.likes, post.comments, post.alias, user.login as author, user.avatar, user.id as uid, activity.liked, activity.commented", $currentId, "post.alias='" . $alias . "'", "post.date DESC")[0];
+    }
+
+    /**
+     * method that returns the number of posts on the page (meaning the total number of posts from the database by condition)
+     * @param string|bool $theme post selection condition
+     * @return int|string total number of posts
+     */
+    public function postOnPages(string|bool $theme): int|string
+    {
+        return $theme !== false ? $this->pMapper->countRecords($theme) : $this->pMapper->countRecords();
+    }
+
+    /**
+     * method that returns all posts by condition from the database
+     * @param int $currentId current id
+     * @param string|bool $theme post subject
+     * @param int $start starting position (for pagination)
+     * @param int $perpage posts per page (for pagination)
+     * @return array array of posts
+     */
+    public function getAllPosts(int $currentId, string|bool $theme, int $start, int $perpage): array
+    {
+        return $this->pMapper->getArticles("post.id, post.title, post.description, post.date, post.image, post.short_text, post.theme, post.likes, post.comments, post.alias, user.login as author, user.avatar, user.id as uid, activity.liked, activity.commented", $currentId, $theme, "post.date DESC", "$start, $perpage");
+    }
+
+    /**
+     * method that returns 5 most popular posts
+     * @return array array of popular posts
+     */
+    public function getPopularPosts(): array
+    {
+        return $this->pMapper->getArticles("post.title, post.date, post.image, post.alias, user.login as author, user.avatar", false, false, "post.likes DESC", 5);
+    }
+
+    /**
+     * the method returns 5 liked posts to a specific authorized user
+     * @param int $currentId current id
+     * @return array array of liked posts
+     */
+    public function getLikedPosts(int $currentId): array
+    {
+        return $this->pMapper->getArticles("post.title, post.date, post.image, post.alias, activity.liked", $currentId, "activity.liked = 1", "post.date DESC", 5);
     }
 }

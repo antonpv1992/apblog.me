@@ -2,9 +2,7 @@
 
 namespace app\controllers;
 
-use tools\core\Db;
-use tools\core\mappers\ContactMapper;
-use tools\core\mappers\UserMapper;
+use app\models\User;
 use tools\core\services\UserService;
 
 class ProfileController extends AppController
@@ -17,23 +15,22 @@ class ProfileController extends AppController
      */
     public function indexAction(): void
     {
-        $users = new UserMapper(Db::instance());
-        $contacts = new ContactMapper(Db::instance());
-        if($_SERVER['REQUEST_METHOD'] === 'POST'){
-            $this->changeUserData($users, $contacts);
+        $userObj = new User([]);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->changeUserData($userObj);
         }
         $title = "Profile";
         $alias = explode('/', trim($_SERVER["REQUEST_URI"], '/'));
         $isAuth = false;
-        if(end($alias) === 'profile' && isset($_SESSION['user'])){
+        if (end($alias) === 'profile' && isset($_SESSION['user'])) {
             $alias = strtolower($_SESSION['user']['login']);
             $isAuth = true;
-        } else if($users->isUserExists(end($alias))){
+        } elseif ($userObj->aliasExists(end($alias))) {
             $alias = end($alias);
         } else {
             redirect('/empty');
         }
-        $user = $users->getUsers("*", "user.login='$alias'")[0];
+        $user = $userObj->getByLogin($alias);
         $this->set(compact('title', 'user', 'alias', 'isAuth'));
     }
 }

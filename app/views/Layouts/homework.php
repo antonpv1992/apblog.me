@@ -19,7 +19,7 @@
           <a class="fas fa-user-tie" href="/profile"><?=isset($_SESSION['user']) ? $_SESSION['user']['login'] : ''?></a>
         </li>
           <?php
-          if(!isset($_SESSION['user'])):
+          if (!isset($_SESSION['user'])):
               ?>
             <li class="header__menu-item">
               <a class="fas fa-user-plus" href="/sign-in">Войти</a>

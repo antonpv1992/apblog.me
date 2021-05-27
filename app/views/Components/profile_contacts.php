@@ -8,7 +8,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
             <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="text" name="site" value="<?=$user->getSite()?>">
           </span>
@@ -30,7 +30,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
             <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="text" name="telegram" value="<?=$user->getTelegram()?>">
           </span>
@@ -52,7 +52,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
             <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="text" name="viber" value="<?=$user->getViber()?>">
           </span>
@@ -74,7 +74,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
             <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="text" name="whatsapp" value="<?=$user->getWhatsapp()?>">
           </span>
@@ -96,7 +96,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
             <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="text" name="signall" value="<?=$user->getSignal()?>">
           </span>
@@ -118,7 +118,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
            <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="text" name="zoom" value="<?=$user->getZoom()?>">
           </span>
@@ -140,7 +140,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
             <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="text" name="skype" value="<?=$user->getSkype()?>">
           </span>
@@ -162,7 +162,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
             <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="text" name="facebook" value="<?=$user->getFacebook()?>">
           </span>
@@ -184,7 +184,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
             <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="text" name="twitter" value="<?=$user->getTwitter()?>">
           </span>
@@ -206,7 +206,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
             <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="text" name="vk" value="<?=$user->getVk()?>">
           </span>
@@ -228,7 +228,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
             <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="text" name="ok" value="<?=$user->getOk()?>">
           </span>
@@ -250,7 +250,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
             <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="text" name="instagram" value="<?=$user->getInstagram()?>">
           </span>
@@ -272,7 +272,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
           <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="text" name="youtube" value="<?=$user->getYoutube()?>">
           </span>

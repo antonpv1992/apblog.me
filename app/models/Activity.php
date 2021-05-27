@@ -10,7 +10,7 @@ class Activity extends AppModel
      */
     protected function load(array $data): void
     {
-        foreach($data as $key => $value){
+        foreach ($data as $key => $value) {
             $this->fields[$key] = $value;
         }
     }

@@ -23,9 +23,9 @@ class View
     public function __construct(array $route, $layout = '', $view = '')
     {
         $this->route = $route;
-        if($layout === false){
+        if ($layout === false) {
             $this->layout = false;
-        } else{
+        } else {
             $this->layout = $layout ?: LAYOUT;
         }
         $this->view = $view;
@@ -37,20 +37,20 @@ class View
      */
     public function render(array|string $userData): void
     {
-        if(is_array($userData)) {
+        if (is_array($userData)) {
             extract($userData);
         }
         $file_view = APP . "/views/{$this->route['controller']}/" . lowerCamelCase($this->view) . ".php";
         ob_start();
-        if(is_file($file_view)){
+        if (is_file($file_view)) {
             require $file_view;
-        } else{
+        } else {
             redirect('/empty');
         }
         $content = ob_get_clean();
-        if($this->layout !== false){
+        if ($this->layout !== false) {
             $file_layout = APP . "/views/Layouts/{$this->layout}.php";
-            if(is_file($file_layout)){
+            if (is_file($file_layout)) {
                 require $file_layout;
             } else{
                 redirect('/empty');

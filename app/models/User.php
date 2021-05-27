@@ -2,8 +2,14 @@
 
 namespace app\models;
 
+use tools\core\Db;
+use tools\core\mappers\UserMapper;
+
 class User extends AppModel
 {
+
+    /** @var UserMapper storage mapper */
+    private UserMapper $uMapper;
 
     /**
      * method for loading data from the database
@@ -11,9 +17,10 @@ class User extends AppModel
      */
     protected function load(array $data): void
     {
-        foreach($data as $key => $value){
+        foreach ($data as $key => $value) {
             $this->fields[$key] = $value;
         }
+        $this->uMapper = new UserMapper(Db::instance());
     }
 
     /**
@@ -28,9 +35,9 @@ class User extends AppModel
         $this->fields['name'] = $data['name'];
         $this->fields['surname'] = $data['surname'];
         $this->fields['birthday'] = $data['birthday'] !== '' ? $data['birthday']: null;
-        if(isset($data['man'])){
+        if (isset($data['man'])) {
             $this->fields['sex'] = 'man';
-        } else if(isset($data['woman'])){
+        } elseif(isset($data['woman'])) {
             $this->fields['sex'] = 'woman';
         } else {
             $this->fields['sex'] = null;
@@ -41,6 +48,7 @@ class User extends AppModel
         $this->fields['author'] = $data['author'] ?? 0;
         $this->fields['likes'] = $data['likes'] ?? 0;
         $this->fields['avatar'] = isset($data['avatar']) ? file_get_contents($data['avatar']) : file_get_contents("https://memchik.ru/images/mems/5ccaed65eab15.jpg");
+        $this->uMapper = new UserMapper(Db::instance());
     }
 
     /**
@@ -284,5 +292,115 @@ class User extends AppModel
     public function getYoutube(): string
     {
         return $this->fields['youtube'] ?? '';
+    }
+
+    /**
+     * method that returns top 5 authors
+     * @return array array of authors
+     */
+    public function getTopAuthors(): array
+    {
+        return $this->uMapper->getUsers('user.login, user.likes, user.avatar', "user.author=1", "user.likes DESC", 5);
+    }
+
+    /**
+     * method for updating the avatar on the logged in user page
+     * @param mixed $image picture to update
+     * @param int $uid user id
+     */
+    public function updateAvatar(mixed $image, int $uid): void
+    {
+        $blob = addslashes(file_get_contents(($image)));
+        $this->uMapper->updateUserField("avatar='$blob'", "id=" . $uid);
+    }
+
+    /**
+     * method that checks if such a column exists
+     * @param string|int $key column name
+     * @return bool true if the column exists
+     */
+    public function isCol(string|int $key): bool
+    {
+        return $this->uMapper->isCol($key) == 1;
+    }
+
+    /**
+     * method for updating the required field in the database
+     * @param string $key field name
+     * @param string $value field value
+     * @param int|string $uid user id
+     */
+    public function updateCurrentField(string $key, string $value, int|string $uid): void
+    {
+        $this->uMapper->updateUserField("$key='$value'", "id=" . $uid);
+    }
+
+    /**
+     * method that checks whether the post exists by alias
+     * @param string $alias post alias
+     * @return bool true if post exists
+     */
+    public function aliasExists(string $alias): bool
+    {
+        return $this->uMapper->isUserExists($alias);
+    }
+
+    /**
+     * method that returns users by login
+     * @param string $login user login
+     * @return User user
+     */
+    public function getByLogin(string $login): User
+    {
+        return $this->uMapper->getUsers("*", "user.login='$login'")[0];
+    }
+
+    /**
+     * method that returns an array of users with login and mail
+     * @return array array of users
+     */
+    public function getLoginAndEmail(): array
+    {
+        return $this->uMapper->getUsers("login, email");
+    }
+
+    /**
+     * method for saving a user to the database
+     * @return User user
+     */
+    public function saveUser(): User
+    {
+        $this->uMapper->save($this->getAllFields());
+        return $this->uMapper->getUser("id, login, email, password", "login='" . $this->getLogin() . "'");;
+    }
+
+    /**
+     * method for getting a user by login for a session
+     * @param string $login user login
+     * @return User user
+     */
+    public function getSingleUser(string $login): User
+    {
+        return $this->uMapper->getUser("id, login, email, password", "login='" . $login . "'");
+    }
+
+    /**
+     * method for checking the existence of mail
+     * @param string $email mail
+     * @return bool true if mail exists
+     */
+    public function isEmail(string $email): bool
+    {
+        return $this->uMapper->isEmailExists($email);
+    }
+
+    /**
+     * method to update the password
+     * @param string $newPassword new generated password
+     * @param string $email mail
+     */
+    public function updatePassword(string $newPassword, string $email): void
+    {
+        $this->uMapper->updateUserField("password='$newPassword'", "email='" . $email ."'");
     }
 }

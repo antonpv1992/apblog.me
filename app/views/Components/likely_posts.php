@@ -1,8 +1,8 @@
-<?php if(isset($_SESSION['user'])):?>
+<?php if (isset($_SESSION['user'])): ?>
 <section class="sidebar__likely">
   <h3 class="sidebar__likely-title">Понравившиеся посты</h3>
   <?php 
-    if(!empty($liked)):
+    if (!empty($liked)):
   ?>
   <ul class="sidebar__likely-posts">
     <?php foreach ($liked as $like):

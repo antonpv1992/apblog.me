@@ -10,8 +10,8 @@ class Registry {
     public static function auth(): void
     {
         session_start();
-        if(!isset($_SESSION['user']) && isset($_COOKIE['user'])){
-            if(FormValidation::verify(json_decode($_COOKIE['user'], true))){
+        if (!isset($_SESSION['user']) && isset($_COOKIE['user'])) {
+            if (FormValidation::verify(json_decode($_COOKIE['user'], true))) {
                 $_SESSION['user'] = json_decode($_COOKIE['user'], true);
             } else {
                 setcookie("user", "", time() - 3600);

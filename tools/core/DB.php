@@ -18,7 +18,7 @@ class Db
      */
     public static function instance(): Db
     {
-        if(self::$instance === null){
+        if (self::$instance === null) {
             self::$instance = new self();
         }
         return self::$instance;
@@ -67,7 +67,7 @@ class Db
     {
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
-        if($stmt->fetch()) {
+        if ($stmt->fetch()) {
             return true;
         }
         return false;
@@ -83,7 +83,7 @@ class Db
     {
         $stmt = $this->db->prepare("SELECT count(*) FROM information_schema.COLUMNS WHERE COLUMN_NAME = '$col' AND TABLE_NAME = '$table' AND TABLE_SCHEMA = '$this->scheme'");
         $result = $stmt->execute();
-        if($result !== false){
+        if ($result !== false) {
             return $stmt->fetch()['count(*)'];
         }
         return 0;
@@ -99,7 +99,7 @@ class Db
     {
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($params);
-        if($result !== false){
+        if ($result !== false) {
             return $stmt->fetchAll();
         }
         return [];
@@ -115,7 +115,7 @@ class Db
     {
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute($params);
-        if($result !== false){
+        if ($result !== false) {
             return $stmt->fetchColumn();
         }
         return [];
@@ -137,11 +137,11 @@ class Db
     /**
      * method for updating data in the database
      * @param string $table table name
-     * @param string $params parameters
+     * @param array $params parameters
      * @param string $param search parameter
      * @param string $field search field
      */
-    public function update(string $table, string $params, string $param, string $field): void
+    public function update(string $table, array $params, string $param, string $field): void
     {
         $pairs = setFieldsAndKeys($params);
         $sql = "UPDATE $table SET $pairs WHERE $field = $param";

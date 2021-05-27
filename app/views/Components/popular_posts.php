@@ -1,11 +1,11 @@
 <section class="sidebar__popular">
   <h3 class="sidebar__popular-title">Популярные посты</h3>
   <?php 
-    if(!empty($populars)):
+    if (!empty($populars)):
   ?>
   <ul class="sidebar__popular-posts">
     <?php 
-    foreach($populars as $popular):
+    foreach ($populars as $popular):
     ?>
     <li class="sidebar__popular-post">
       <div class="sidebar__popular-link post-link">

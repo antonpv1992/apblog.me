@@ -8,7 +8,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
             <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="text" name="name" value="<?=$user->getName()?>">
           </span>
@@ -30,7 +30,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
             <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="text" name="surname" value="<?=$user->getSurname()?>">
           </span>
@@ -52,7 +52,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
            <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="date" name="birthday" value="<?=$user->getBirthday()?>">
           </span>
@@ -67,7 +67,7 @@
       </div>
     </li>
     <?php 
-      if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+      if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
     ?>
     <li class="profile__item">
       <span class="profile__item-name">
@@ -91,7 +91,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
             <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="text" name="country" value="<?=$user->getCountry()?>">
           </span>
@@ -113,7 +113,7 @@
         <div class="profile__form">
           <span class="profile__item-link">
             <?php 
-              if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+              if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
             ?>
             <input class="profile__field" type="text" name="city" value="<?=$user->getCity()?>">
           </span>

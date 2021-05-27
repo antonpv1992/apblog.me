@@ -2,8 +2,14 @@
 
 namespace app\models;
 
+use tools\core\Db;
+use tools\core\mappers\ContactMapper;
+
 class Contact extends AppModel
 {
+
+    /** @var ContactMapper storage mapper */
+    private ContactMapper $cMapper;
 
     /**
      * method for loading data from the database
@@ -11,9 +17,10 @@ class Contact extends AppModel
      */
     protected function load(array $data): void
     {
-        foreach($data as $key => $value){
+        foreach ($data as $key => $value) {
             $this->fields[$key] = $value;
         }
+        $this->cMapper = new ContactMapper(Db::instance());
     }
 
     /**
@@ -36,6 +43,7 @@ class Contact extends AppModel
         $this->fields['ok'] = $data['ok'] ?? '';
         $this->fields['instagram'] = $data['instagram'] ?? '';
         $this->fields['youtube'] = $data['youtube'] ?? '';
+        $this->cMapper = new ContactMapper(Db::instance());
     }
 
     /**
@@ -161,5 +169,34 @@ class Contact extends AppModel
     public function getYoutube(): string
     {
         return $this->fields['youtube'];
+    }
+
+    /**
+     * method that checks if such a column exists
+     * @param string|int $key column name
+     * @return bool true if the column exists
+     */
+    public function isCol(string|int $key): bool
+    {
+        return $this->cMapper->isCol($key) == 1;
+    }
+
+    /**
+     * method to update the required field
+     * @param string $key field name
+     * @param string $value field value
+     * @param int|string $uid user id
+     */
+    public function updateCurrentField(string $key, string $value, int|string $uid): void
+    {
+        $this->cMapper->updateContactField("$key='$value'", "user=" . $uid);
+    }
+
+    /**
+     * method for saving all fields in the database
+     */
+    public function saveContact(): void
+    {
+        $this->cMapper->save($this->getAllFields());
     }
 }

@@ -15,21 +15,21 @@ class RegistrationController extends AppController
      */
     public function indexAction(): void
     {
-        if(isset($_SESSION['user'])){
+        if (isset($_SESSION['user'])) {
             redirect('/');
         }
-        if(isset($_POST['data'])){
+        if (isset($_POST['data'])) {
             $this->dataExists();
         }
         $title = 'Registration';
         $this->set(compact('title'));
-        if(!empty($_POST)){
+        if (!empty($_POST)) {
             $postData = [];
-            foreach($_POST as $key => $value) {
+            foreach ($_POST as $key => $value) {
                 $postData[$key] = hsc($value);
             }
             $errors = FormValidation::validate($postData);
-            if(empty($errors)){
+            if (empty($errors)) {
                 $this->registrationUser($postData);
                 redirect('/');
             }

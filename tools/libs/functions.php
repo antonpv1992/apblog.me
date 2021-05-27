@@ -35,9 +35,9 @@ function lowerCamelCase(string $name): string
  */
 function redirect(bool|string $http = false): void
 {
-    if($http){
+    if ($http) {
         $redirect = $http;
-    }else {
+    } else {
         $redirect = $_SERVER['HTTP_REFERER'] ?? '/';
     }
     header("Location: $redirect");
@@ -61,7 +61,7 @@ function hsc(string $str): string
  */
 function transliterate(string $text): string
 {
-    $alphabet = array(
+    $alphabet = array (
     "а"=>"a","б"=>"b","в"=>"v","г"=>"g","д"=>"d",
     "е"=>"e", "ё"=>"yo","ж"=>"j","з"=>"z","и"=>"i",
     "й"=>"i","к"=>"k","л"=>"l", "м"=>"m","н"=>"n",
@@ -91,7 +91,7 @@ function transliterate(string $text): string
  */
 function generateAlias(string $text): string
 {
-    return strtolower(implode("-", array_filter(explode(' ', transliterate($text)), function ($key){
+    return strtolower(implode("-", array_filter(explode(' ', transliterate($text)), function($key){
         return $key !== "-";
     })));
 }
@@ -104,11 +104,11 @@ function generateAlias(string $text): string
 function aliasCollision(string $alias): string
 {
     $array = explode("-", $alias);
-    if(is_numeric($array[count($array) - 1])){
+    if (is_numeric($array[count($array) - 1])) {
         $array[count($array) - 1]++;
     } else {
         array_push($array, '1');
-    };
+    }
     return implode("-", $array);
 }
 
@@ -120,7 +120,7 @@ function aliasCollision(string $alias): string
 function generateFields(array $data): string
 {
     $str = '';
-    foreach($data as $key => $value) {
+    foreach ($data as $key => $value) {
         $str .= $key . ', ';
     }
     return substr($str, 0, -2);
@@ -151,7 +151,7 @@ function getFieldsAndKeys(array $data): array
 function setFieldsAndKeys(array $data): string
 {
     $str = '';
-    foreach($data as $key => $value){
+    foreach ($data as $key => $value) {
         $str .= "$key = :$key, ";
     }
     return substr(rtrim($str), 0, -1);
@@ -170,16 +170,16 @@ function generatePassword(): string
     $numbers = 0;
     $letters = 0;
     $length = 0;
-    while ( $length <= $min_length OR $numbers <= $min_numbers OR $letters <= $min_letters) {
+    while ($length <= $min_length OR $numbers <= $min_numbers OR $letters <= $min_letters) {
         $length += 1;
         $type = rand(1, 3);
-        if($type ==1){
+        if ($type == 1) {
             $password .= chr(rand(48, 57)); //Numbers
             $numbers += 1;
-        } elseif($type==2){
+        } elseif ($type == 2) {
             $password .= chr(rand(65, 90)); //A->Z
             $letters += 1;
-        } else{
+        } else {
             $password .= chr(rand(97, 122)); //a->z
             $letters += 1;
         }
@@ -207,7 +207,7 @@ function sleshToCamel(string $text): string
 {
     $temp = explode('-', $text);
     $res = $temp[0];
-    for($i = 1; $i < count($temp); $i++){
+    for ($i = 1; $i < count($temp); $i++) {
         $res .= ucfirst($temp[$i]);
     }
     return $res;
@@ -220,15 +220,15 @@ function sleshToCamel(string $text): string
 function outputTable($color = false): void
 {
     echo '<tr class="content__table-row">';
-    for($i = 1; $i <= 10; $i++) {
-        if($i === 6){
+    for ($i = 1; $i <= 10; $i++) {
+        if ($i === 6) {
             echo '</tr>';
             echo '<tr class="content__table-row">';
         }
         echo '<td class="content__table-col">';
-        for($j = 1; $j <= 10; $j++) {
+        for ($j = 1; $j <= 10; $j++) {
             echo ($color ?  getColor($i) . ' x ' . getColor($j) . ' = ' . getColor($i * $j) . '<br>' : $i . ' x ' . $j . ' = ' . $i * $j . '<br>');
-        };
+        }
         echo '</td>';
     }
     echo '</tr>';
@@ -245,13 +245,13 @@ function getColor(int $number): string
     $result = '';
     $tagsContainer = [];
     $count = 0;
-    while(strlen((string)$number) !== 1 ) {
+    while (strlen((string)$number) !== 1) {
         $tagsContainer[$count] = "<span class='{$colors[$number % 10]}'>" . $number % 10 . '</span>';
         $count++;
         $number = floor($number / 10);
     }
     $tagsContainer[$count] = "<span class='{$colors[$number % 10]}'>" . $number % 10 . '</span>';
-    for($i = $count; $i >= 0; $i--) {
+    for ($i = $count; $i >= 0; $i--) {
         $result .= $tagsContainer[$i];
     }
     return $result;
@@ -266,8 +266,8 @@ function paintWord(string $str): void
     $letters = preg_split('/(?<!^)(?!$)/u', $str);
     $colors = COLORS;
     $text = '';
-    for($i = 0, $j = 0; $i < count($letters); $i++, $j++){
-        if($j >= 10){
+    for ($i = 0, $j = 0; $i < count($letters); $i++, $j++) {
+        if ($j >= 10) {
             $j = 0;
         }
         $text .= "<span class='{$colors[$j]}'>" . $letters[$i] . '</span>';

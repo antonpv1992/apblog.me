@@ -4,9 +4,6 @@ namespace tools\core\services;
 
 use app\models\Contact;
 use app\models\User;
-use tools\core\Db;
-use tools\core\mappers\ContactMapper;
-use tools\core\mappers\UserMapper;
 
 trait RegistrationService 
 {
@@ -16,10 +13,10 @@ trait RegistrationService
      */
     protected function dataExists(): void
     {
-        $umapper = new UserMapper(DB::instance());
-        $users = $umapper->getUsers("login, email");
+        $uModel = new User([]);
+        $users = $uModel->getLoginAndEmail();
         $array = [];
-        foreach($users as $user){
+        foreach ($users as $user) {
             array_push($array, $user->getAllFields());
         }
         $array = json_encode($array, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK);
@@ -33,14 +30,11 @@ trait RegistrationService
      */
     protected function registrationUser(array $data): void
     {
-        $umapper = new UserMapper(DB::instance());
-        $cmapper = new ContactMapper(DB::instance());
         $user = new User($data, false);
-        $umapper->save($user->getAllFields());
-        $seance = $umapper->getUser("id, login, email, password", "login='" . $user->getLogin() . "'");
-        $contact = new Contact(['user' => $seance->getID()]);
-        $cmapper->save($contact->getAllFields());
-        $_SESSION['user'] = $seance->getAllFields();
-        setcookie("user", json_encode($seance->getAllFields(), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK), time() + (86400 * 7));
+        $user = $user->saveUser();
+        $contact = new Contact(['user' => $user->getID()]);
+        $contact->saveContact();
+        $_SESSION['user'] = $user->getAllFields();
+        setcookie("user", json_encode($user->getAllFields(), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK), time() + (86400 * 7));
     }
 }

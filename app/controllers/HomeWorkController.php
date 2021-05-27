@@ -9,14 +9,14 @@ class HomeWorkController extends AppController
     protected $layout = 'homework';
 
     /** @var string current title */
-    private $title = 'Mysite.loc';
+    private string $title = 'Mysite.loc';
 
     /**
      * main page HomeWork
      */
     public function indexAction(): void
     {
-        if(!isset($_SESSION['user'])){
+        if (!isset($_SESSION['user'])) {
             redirect('/empty');
         }
         $title = $this->title;
@@ -28,7 +28,7 @@ class HomeWorkController extends AppController
      */
     public function actionAction(): void
     {
-        if(!isset($_SESSION['user'])){
+        if (!isset($_SESSION['user'])) {
             redirect('/empty');
         }
         $title = $this->title;

@@ -1,7 +1,7 @@
 <main class="main">
   <?php 
-    if(!empty($articles)):
-    foreach($articles as $article):
+    if (!empty($articles)):
+    foreach ($articles as $article):
   ?>
   <article class="main__post post">
     <div class="post__box">

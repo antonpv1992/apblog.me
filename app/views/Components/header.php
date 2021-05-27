@@ -11,13 +11,13 @@
           <input class="header__menu-input" type="text" name="query" placeholder="Поиск" />
         </form>
       </li>
-      <?php if(isset($_SESSION['user'])):?>
+      <?php if (isset($_SESSION['user'])): ?>
       <li class="header__menu-item">
         <a class="fas fa-user-tie" href="/profile"><?=isset($_SESSION['user']) ? $_SESSION['user']['login'] : ''?></a>
       </li>
       <?php
         endif;
-        if(!isset($_SESSION['user'])):
+        if (!isset($_SESSION['user'])):
       ?>
       <li class="header__menu-item">
         <a class="fas fa-user-plus" href="/sign-in">Войти</a>

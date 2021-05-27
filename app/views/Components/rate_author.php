@@ -1,11 +1,11 @@
 <section class="sidebar__rate">
   <h3 class="sidebar__rate-title">Рейтинг авторов</h3>
   <?php 
-    if(!empty($authors)):
+    if (!empty($authors)):
   ?>
   <ul class="sidebar__rate-authors">
     <?php 
-      foreach($authors as $author):
+      foreach ($authors as $author):
     ?>
     <li class="sidebar__rate-author">
       <div class="sidebar__rate-author-box author">

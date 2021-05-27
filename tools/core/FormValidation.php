@@ -16,18 +16,18 @@ class FormValidation
     {
         $instance = new FormValidation();
         $errors = [];
-        foreach($fields as $key => $value){
+        foreach ($fields as $key => $value) {
             $keyErrors = [];
-            switch($key){
+            switch ($key) {
                 case 'login':
                     ($instance->checkLogin($value) !== '') ? array_push($keyErrors, $instance->checkLogin($value)) : '';
                     ($instance->checkEmpty($value) !== '') ? array_push($keyErrors, $instance->checkEmpty($value)) : '';
-                    ($instance->checklLoginExists($value) !== '') ? array_push($keyErrors, $instance->checklLoginExists($value)) : '';
+                    ($instance->checkLoginExists($value) !== '') ? array_push($keyErrors, $instance->checklLoginExists($value)) : '';
                     break;
                 case 'email':
                     ($instance->checkEmail($value) !== '') ? array_push($keyErrors, $instance->checkEmail($value)) : '';
                     ($instance->checkEmpty($value) !== '') ? array_push($keyErrors, $instance->checkEmpty($value)) : '';
-                    ($instance->checklEmailExists($value) !== '') ? array_push($keyErrors, $instance->checklEmailExists($value)) : '';
+                    ($instance->checkEmailExists($value) !== '') ? array_push($keyErrors, $instance->checklEmailExists($value)) : '';
                     break;
                 case 'password':
                     ($instance->checkPassword($value) !== '') ? array_push($keyErrors, $instance->checkPassword($value)) : '';
@@ -63,7 +63,10 @@ class FormValidation
         $instance = new FormValidation();
         $mapper = new UserMapper(Db::instance());
         $user = $mapper->getOne($fields['login'], 'login');
-        if(strtolower($fields['login']) === strtolower($user->getLogin()) && (password_verify($fields['password'], $user->getPassword()))){
+        if (
+            strtolower($fields['login']) === strtolower($user->getLogin())
+            && (password_verify($fields['password'], $user->getPassword()))
+        ) {
             return '';
         } else {
             return $instance->createError('Неверный логин или пароль');
@@ -79,8 +82,8 @@ class FormValidation
     {
         $umapper = new UserMapper(Db::instance());
         $user = $umapper->getUser("id, login, email, password", "login='" . $cookies['login'] . "'");
-        foreach ($user->getAllFields() as $key => $value){
-            if($cookies[$key] != $value){
+        foreach ($user->getAllFields() as $key => $value) {
+            if ($cookies[$key] != $value) {
                 return false;
             }
         }
@@ -93,7 +96,7 @@ class FormValidation
      */
     public static function printErrors(array $errors): void
     {
-        foreach($errors as $error){
+        foreach ($errors as $error) {
             echo $error;
         }
     }
@@ -105,7 +108,7 @@ class FormValidation
      */
     private function checkEmpty(string $field): string
     {
-        if($field === ''){
+        if ($field === '') {
             return $this->createError('Данное поле должно не должно быть пустым!');
         }
         return '';
@@ -118,7 +121,7 @@ class FormValidation
      */
     private function checkLogin(string $login): string
     {
-        if(preg_match('/^[a-zA-zа-яА-Я_]{1}[a-zA-Z1-9а-яА-Я_-]{3,24}$/', $login) !== 1) {
+        if (preg_match('/^[a-zA-zа-яА-Я_]{1}[a-zA-Z1-9а-яА-Я_-]{3,24}$/', $login) !== 1) {
             return $this->createError('Логин должен начинаться с буквы или знака подчеркивания и быть длиннее 3 и короче 26 символов');
 		}
 		return '';
@@ -131,7 +134,7 @@ class FormValidation
      */
     private function checkPassword(string $password): string
     {
-        if(preg_match_all('/(?=.*[0-9])(?=.*[a-z])[0-9!@#$%^&*a-zA-Z]{6,}/', $password) !== 1) {
+        if (preg_match_all('/(?=.*[0-9])(?=.*[a-z])[0-9!@#$%^&*a-zA-Z]{6,}/', $password) !== 1) {
             return $this->createError('Пароль должен содержать минимум одну букву и цифру, а так же быть не короче 6 символов');
 		}
 		return '';
@@ -145,7 +148,7 @@ class FormValidation
      */
     private function checkRepeatPassword(string $password, string $repeat): string
     {
-        if($password !== '' && $password !== $repeat) {
+        if ($password !== '' && $password !== $repeat) {
             return $this->createError('Пароли не совпадают');
         }
         return '';
@@ -158,7 +161,7 @@ class FormValidation
      */
     private function checkEmail(string $email): string
     {
-        if(preg_match('/(?:[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/', $email) !== 1){
+        if (preg_match('/(?:[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/', $email) !== 1) {
             return $this->createError('Неверный формат почты!');
         }
         return '';
@@ -171,7 +174,7 @@ class FormValidation
      */
     private function checkPhone(string $phone): string
     {
-        if(preg_match('/((\+)?\b(8|38)?(0[\d]{2}))([\d-]{5,8})([\d]{2})/', $phone) !== 1 && $phone !== ''){
+        if (preg_match('/((\+)?\b(8|38)?(0[\d]{2}))([\d-]{5,8})([\d]{2})/', $phone) !== 1 && $phone !== '') {
             return $this->createError('Неверный формат телефонного номера!');
         }
         return '';
@@ -184,7 +187,7 @@ class FormValidation
      */
     private function checkText(string $input): string
     {
-        if(preg_match('/^[,.\'-а-яa-z]{2,}$/i', $input) !== 1 && $input !== ''){
+        if (preg_match('/^[,.\'-а-яa-z]{2,}$/i', $input) !== 1 && $input !== '') {
             return $this->createError('Данное поле должно быть не короче 2-х символов и состоять из букв!');
         }
         return '';
@@ -205,10 +208,10 @@ class FormValidation
      * @param string $login
      * @return string error or empty string
      */
-    private function checklLoginExists(string $login): string
+    private function checkLoginExists(string $login): string
     {
         $mapper = new UserMapper(DB::instance());
-        if($mapper->isUserExists($login)){
+        if ($mapper->isUserExists($login)) {
             return $this->createError('Пользователь с таким логином уже существует!');
         }
         return '';
@@ -219,10 +222,10 @@ class FormValidation
      * @param string $email
      * @return string error or empty string
      */
-    private function checklEmailExists(string $email): string
+    private function checkEmailExists(string $email): string
     {
         $mapper = new UserMapper(DB::instance());
-        if($mapper->isEmailExists($email)){
+        if ($mapper->isEmailExists($email)) {
             return $this->createError('Пользователь с такой почтой уже существует!');
         }
         return '';

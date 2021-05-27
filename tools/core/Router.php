@@ -46,8 +46,8 @@ Class Router
      */
     public static function matchRoute(string $url): bool
     {
-        foreach(self::$routes as $pattern => $route){
-            if(preg_match("#$pattern#i", $url, $matches)){
+        foreach (self::$routes as $pattern => $route) {
+            if (preg_match("#$pattern#i", $url, $matches)) {
                 self::$route = self::getCurrentRoute($matches, $route);
                 return true;
             }
@@ -63,12 +63,12 @@ Class Router
      */
     private static function getCurrentRoute(array $routes, array $route): array
     {
-        foreach($routes as $key => $value){
-            if(is_string($key)){
+        foreach ($routes as $key => $value) {
+            if (is_string($key)) {
                 $route[$key] = $value;
             }
         }
-        if(!isset($route['action'])){
+        if (!isset($route['action'])) {
             $route['action'] = 'index';
         }
         $route['controller'] = upperCamelCase($route['controller']);
@@ -81,21 +81,21 @@ Class Router
      */
     public static function dispatch(string $url): void
     {
-        if(self::matchRoute($url)){
+        if (self::matchRoute($url)) {
             $controller = 'app\controllers\\' . self::$route['controller'] . 'Controller';
-            if(class_exists($controller)){
+            if (class_exists($controller)) {
                 $object = new $controller(self::$route);
                 $action = lowerCamelCase(self::$route['action']) . 'Action';
-                if(method_exists($object, $action)){
+                if (method_exists($object, $action)) {
                     $object->$action();
                     $object->getView();
                 } else{
                     redirect('/empty');
                 }
-            } else{
+            } else {
                 redirect('/empty');
             }
-        } else{
+        } else {
             redirect('/empty');
         }
     }

@@ -16,7 +16,7 @@ class LogoutController extends AppController
      */
     public function indexAction(): void
     {
-        if(isset($_SESSION['user'])){
+        if (isset($_SESSION['user'])) {
             unset($_SESSION['user']);
             setcookie("user", "", time() - 3600);
         }

@@ -2,7 +2,7 @@
 <div class="profile__avatar-box">
   <img class="profile__avatar" src="data:image/png;base64,<?=base64_encode($user->getAvatar());?>" alt="Аватар">
   <?php 
-    if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+    if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
   ?>
   <form class="profile__change" enctype="multipart/form-data" method="post">
     <label class="profile__change-avatar"> Изменить фото
@@ -24,9 +24,9 @@
     <span class="profile__item-name">Пол:</span>
     <span class="profile__item-value">
     <?php 
-      if($user->getSex() === 'man'){
+      if ($user->getSex() === 'man') {
         echo 'Мужской';
-      } else if ($user->getSex() === 'woman'){
+      } else if ($user->getSex() === 'woman') {
         echo 'Женский';
       } else {
         echo '';
@@ -34,7 +34,7 @@
     ?></span>
   </li>
   <?php 
-    if($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
+    if ($isAuth == 1 && strtolower($alias) === strtolower($_SESSION['user']['login'])):
   ?>
   <li class="profile__info-item">
     <span class="profile__item-name">Почта:</span>
