@@ -6,10 +6,10 @@ use tools\core\Db;
 
 abstract class Mapper
 {
-    /** @var DB object*/
+    /** @var DB object */
     protected DB $storage;
 
-    /** @var string current table*/
+    /** @var string current table */
     protected string $table;
 
     /** @var string current key */
@@ -93,7 +93,7 @@ abstract class Mapper
     public function countRecords(string|bool $condition = false): int|string
     {
         $condition = $condition !== false ? "WHERE $condition" : "";
-        return $this->storage->query("SELECT COUNT(*) FROM $this->table $condition")[0]['COUNT(*)'] ;
+        return $this->storage->query("SELECT COUNT(*) FROM $this->table $condition")[0]['COUNT(*)'];
     }
 
     /**

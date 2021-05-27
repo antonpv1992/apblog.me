@@ -15,13 +15,13 @@ trait LoginService
     {
         $user = new User([]);
         $newPassword = generatePassword();
-        $to      = "'" . $email . "'";
+        $to = "'" . $email . "'";
         $subject = 'Смена пароля';
         $message = 'Здравствуйте! Ваш новый пароль - ' . $newPassword;
-        $headers = array (
+        $headers = array(
             'From' => 'admin@apblog.ua',
             'Reply-To' => 'admin@apblog.ua',
-            'X-Mailer' => 'PHP/'. phpversion()
+            'X-Mailer' => 'PHP/' . phpversion()
         );
         mail($to, $subject, $message, $headers);
         $newPassword = password_hash($newPassword, PASSWORD_DEFAULT);

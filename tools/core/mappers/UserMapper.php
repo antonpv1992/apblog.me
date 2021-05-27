@@ -97,12 +97,21 @@ class UserMapper extends Mapper
      * @param bool|string $limit field limit
      * @return array objects
      */
-    public function getUsers(string $fields, bool|string $condition = false, bool|string $order = false, bool|string $limit = false): array
+    public function getUsers(
+        string $fields,
+        bool|string $condition = false,
+        bool|string $order = false,
+        bool|string $limit = false
+    ): array
     {
         $condition = $condition !== false ? " WHERE " . $condition : "";
         $limit = $limit !== false ? " LIMIT " . $limit : "";
         $order = $order !== false ? " ORDER BY " . $order : "";
-        return $this->fieldsToUser($this->query("SELECT $fields FROM $this->table INNER JOIN contact ON user.id = contact.user $condition $order $limit"));
+        return $this->fieldsToUser(
+            $this->query(
+                "SELECT $fields FROM $this->table INNER JOIN contact ON user.id = contact.user $condition $order $limit"
+            )
+        );
     }
 
     /**

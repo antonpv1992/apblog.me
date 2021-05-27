@@ -35,6 +35,10 @@ trait RegistrationService
         $contact = new Contact(['user' => $user->getID()]);
         $contact->saveContact();
         $_SESSION['user'] = $user->getAllFields();
-        setcookie("user", json_encode($user->getAllFields(), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK), time() + (86400 * 7));
+        setcookie(
+            "user",
+            json_encode($user->getAllFields(), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK),
+            time() + (86400 * 7)
+        );
     }
 }

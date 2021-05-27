@@ -22,19 +22,34 @@ class FormValidation
                 case 'login':
                     ($instance->checkLogin($value) !== '') ? array_push($keyErrors, $instance->checkLogin($value)) : '';
                     ($instance->checkEmpty($value) !== '') ? array_push($keyErrors, $instance->checkEmpty($value)) : '';
-                    ($instance->checkLoginExists($value) !== '') ? array_push($keyErrors, $instance->checklLoginExists($value)) : '';
+                    ($instance->checkLoginExists($value) !== '') ? array_push(
+                        $keyErrors,
+                        $instance->checklLoginExists($value)
+                    ) : '';
                     break;
                 case 'email':
                     ($instance->checkEmail($value) !== '') ? array_push($keyErrors, $instance->checkEmail($value)) : '';
                     ($instance->checkEmpty($value) !== '') ? array_push($keyErrors, $instance->checkEmpty($value)) : '';
-                    ($instance->checkEmailExists($value) !== '') ? array_push($keyErrors, $instance->checklEmailExists($value)) : '';
+                    ($instance->checkEmailExists($value) !== '') ? array_push(
+                        $keyErrors,
+                        $instance->checklEmailExists($value)
+                    ) : '';
                     break;
                 case 'password':
-                    ($instance->checkPassword($value) !== '') ? array_push($keyErrors, $instance->checkPassword($value)) : '';
+                    ($instance->checkPassword($value) !== '') ? array_push(
+                        $keyErrors,
+                        $instance->checkPassword($value)
+                    ) : '';
                     ($instance->checkEmpty($value) !== '') ? array_push($keyErrors, $instance->checkEmpty($value)) : '';
                     break;
                 case 'password-repeat':
-                    ($instance->checkRepeatPassword($fields['password'], $value) !== '') ? array_push($keyErrors, $instance->checkRepeatPassword($fields['password'], $value)) : '';
+                    ($instance->checkRepeatPassword($fields['password'], $value) !== '') ? array_push(
+                        $keyErrors,
+                        $instance->checkRepeatPassword(
+                            $fields['password'],
+                            $value
+                        )
+                    ) : '';
                     break;
                 case 'phone':
                     ($instance->checkPhone($value) !== '') ? array_push($keyErrors, $instance->checkPhone($value)) : '';
@@ -122,9 +137,11 @@ class FormValidation
     private function checkLogin(string $login): string
     {
         if (preg_match('/^[a-zA-zа-яА-Я_]{1}[a-zA-Z1-9а-яА-Я_-]{3,24}$/', $login) !== 1) {
-            return $this->createError('Логин должен начинаться с буквы или знака подчеркивания и быть длиннее 3 и короче 26 символов');
-		}
-		return '';
+            return $this->createError(
+                'Логин должен начинаться с буквы или знака подчеркивания и быть длиннее 3 и короче 26 символов'
+            );
+        }
+        return '';
     }
 
     /**
@@ -135,9 +152,11 @@ class FormValidation
     private function checkPassword(string $password): string
     {
         if (preg_match_all('/(?=.*[0-9])(?=.*[a-z])[0-9!@#$%^&*a-zA-Z]{6,}/', $password) !== 1) {
-            return $this->createError('Пароль должен содержать минимум одну букву и цифру, а так же быть не короче 6 символов');
-		}
-		return '';
+            return $this->createError(
+                'Пароль должен содержать минимум одну букву и цифру, а так же быть не короче 6 символов'
+            );
+        }
+        return '';
     }
 
     /**
@@ -161,7 +180,10 @@ class FormValidation
      */
     private function checkEmail(string $email): string
     {
-        if (preg_match('/(?:[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/', $email) !== 1) {
+        if (preg_match(
+                '/(?:[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/',
+                $email
+            ) !== 1) {
             return $this->createError('Неверный формат почты!');
         }
         return '';

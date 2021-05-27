@@ -2,7 +2,8 @@
 
 namespace tools\core;
 
-class Registry {
+class Registry
+{
 
     /**
      * method for correctly identifying a user by sessions and cookies

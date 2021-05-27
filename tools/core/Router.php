@@ -2,7 +2,7 @@
 
 namespace tools\core;
 
-Class Router
+class Router
 {
 
     /** @var array of routes */
@@ -89,7 +89,7 @@ Class Router
                 if (method_exists($object, $action)) {
                     $object->$action();
                     $object->getView();
-                } else{
+                } else {
                     redirect('/empty');
                 }
             } else {

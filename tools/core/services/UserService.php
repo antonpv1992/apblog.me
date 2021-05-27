@@ -8,7 +8,7 @@ use app\models\contact;
 trait UserService
 {
 
-     /**
+    /**
      * method for changing profile data in db
      */
     protected function changeUserData(): void

@@ -7,7 +7,7 @@ namespace tools\core;
 class App
 {
 
-    /** @var App attachment  */
+    /** @var App attachment */
     public static App $app;
 
     /**

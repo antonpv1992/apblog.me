@@ -43,13 +43,23 @@ class PostMapper extends Mapper
      * @param bool|string $limit record limit
      * @return array data
      */
-    public function getArticles(string $fields, bool|string $userId = false, bool|string $condition = false, bool|string $order = false, bool|string $limit = false): array
+    public function getArticles(
+        string $fields,
+        bool|string $userId = false,
+        bool|string $condition = false,
+        bool|string $order = false,
+        bool|string $limit = false
+    ): array
     {
         $userId = $userId !== false ? " LEFT JOIN activity ON post.id = activity.post AND $userId = activity.user" : ""; //" LEFT JOIN activity ON post.id = activity.post AND $userId = activity.user"
         $condition = $condition !== false ? " WHERE " . $condition : "";
         $limit = $limit !== false ? " LIMIT " . $limit : "";
         $order = $order !== false ? " ORDER BY " . $order : "";
-        return $this->fieldsToPost($this->query("SELECT $fields FROM $this->table INNER JOIN user ON post.author = user.id $userId $condition $order $limit"));
+        return $this->fieldsToPost(
+            $this->query(
+                "SELECT $fields FROM $this->table INNER JOIN user ON post.author = user.id $userId $condition $order $limit"
+            )
+        );
     }
 
     /**

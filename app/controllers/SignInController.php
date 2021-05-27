@@ -25,12 +25,18 @@ class SignInController extends AppController
                 isset($_POST['login'])
                 && isset($_POST['password'])
             ) {
-                $error = FormValidation::entry(['login' => hsc($_POST['login']), 'password' => hsc($_POST['password'])]);
+                $error = FormValidation::entry(
+                    ['login' => hsc($_POST['login']), 'password' => hsc($_POST['password'])]
+                );
                 if ($error === '') {
                     $user = $this->getUserByLogin($_POST['login']);
                     $_SESSION['user'] = $user->getAllFields();
                     if (isset($_POST['remember'])) {
-                        setcookie("user", json_encode($user->getAllFields(), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK), time() + (86400 * 7));
+                        setcookie(
+                            "user",
+                            json_encode($user->getAllFields(), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK),
+                            time() + (86400 * 7)
+                        );
                     }
                     redirect('/');
                 }

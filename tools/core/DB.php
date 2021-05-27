@@ -4,13 +4,13 @@ namespace tools\core;
 
 class Db
 {
-    /** @var \PDO storage variable*/
+    /** @var \PDO storage variable */
     protected \PDO $db;
 
     /** @var string scheme name */
     protected string $scheme = "trainee_blog";
 
-    /** @var null instance db*/
+    /** @var null instance db */
     private static $instance;
 
     /**
@@ -81,7 +81,9 @@ class Db
      */
     public function colExists(string $table, string $col): int|string
     {
-        $stmt = $this->db->prepare("SELECT count(*) FROM information_schema.COLUMNS WHERE COLUMN_NAME = '$col' AND TABLE_NAME = '$table' AND TABLE_SCHEMA = '$this->scheme'");
+        $stmt = $this->db->prepare(
+            "SELECT count(*) FROM information_schema.COLUMNS WHERE COLUMN_NAME = '$col' AND TABLE_NAME = '$table' AND TABLE_SCHEMA = '$this->scheme'"
+        );
         $result = $stmt->execute();
         if ($result !== false) {
             return $stmt->fetch()['count(*)'];

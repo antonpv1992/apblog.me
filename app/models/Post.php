@@ -56,7 +56,9 @@ class Post extends AppModel
             } while ($this->pMapper->isPostExists($alias));
             $this->fields['alias'] = $alias;
         }
-        $this->fields['image'] = isset($data['image']) ? file_get_contents($data['image']) : file_get_contents('https://picsum.photos/755/306');
+        $this->fields['image'] = isset($data['image']) ? file_get_contents($data['image']) : file_get_contents(
+            'https://picsum.photos/755/306'
+        );
         $this->uMapper = new UserMapper(Db::instance());
         $this->pMapper = new PostMapper(Db::instance());
         $this->aMapper = new ActivityMapper(Db::instance());
@@ -215,16 +217,16 @@ class Post extends AppModel
         $like = 0;
         if ($postArr['res'] === '1') {
             $like = 1;
-            $this->uMapper->update("likes = likes + 1", "id=" .  $postArr['author']);
-            $this->pMapper->update("likes = likes + 1", "id=" .  $postArr['post']);
+            $this->uMapper->update("likes = likes + 1", "id=" . $postArr['author']);
+            $this->pMapper->update("likes = likes + 1", "id=" . $postArr['post']);
         } else {
-            $this->uMapper->update("likes = likes - 1", "id=" .  $postArr['author']);
-            $this->pMapper->update("likes = likes - 1", "id=" .  $postArr['post']);
+            $this->uMapper->update("likes = likes - 1", "id=" . $postArr['author']);
+            $this->pMapper->update("likes = likes - 1", "id=" . $postArr['post']);
         }
         if ($this->aMapper->isExists("post=" . $postArr['post'] . " AND user=" . $postArr['user'] . "")) {
             $this->aMapper->setActivity("liked=$like", "post=" . $postArr['post'] . " AND user=" . $postArr['user']);
         } else {
-            $this->aMapper->addActivity(["post" => $postArr['post'],"user" => $postArr['user'] ,"liked" => 1]);
+            $this->aMapper->addActivity(["post" => $postArr['post'], "user" => $postArr['user'], "liked" => 1]);
         }
     }
 
@@ -252,7 +254,12 @@ class Post extends AppModel
      */
     public function postExists(int $currentId, string $alias): bool
     {
-        if ($this->pMapper->getArticles("post.id, post.title, post.description, post.date, post.image, post.text, post.theme, post.likes, post.comments, post.alias, user.login as author, user.avatar, user.id as uid, activity.liked, activity.commented", $currentId, "post.alias='" . $alias . "'", "post.date DESC")) {
+        if ($this->pMapper->getArticles(
+            "post.id, post.title, post.description, post.date, post.image, post.text, post.theme, post.likes, post.comments, post.alias, user.login as author, user.avatar, user.id as uid, activity.liked, activity.commented",
+            $currentId,
+            "post.alias='" . $alias . "'",
+            "post.date DESC"
+        )) {
             return true;
         }
         return false;
@@ -266,7 +273,12 @@ class Post extends AppModel
      */
     public function getSinglePost(int $currentId, string $alias): Post
     {
-        return $this->pMapper->getArticles("post.id, post.title, post.description, post.date, post.image, post.text, post.theme, post.likes, post.comments, post.alias, user.login as author, user.avatar, user.id as uid, activity.liked, activity.commented", $currentId, "post.alias='" . $alias . "'", "post.date DESC")[0];
+        return $this->pMapper->getArticles(
+            "post.id, post.title, post.description, post.date, post.image, post.text, post.theme, post.likes, post.comments, post.alias, user.login as author, user.avatar, user.id as uid, activity.liked, activity.commented",
+            $currentId,
+            "post.alias='" . $alias . "'",
+            "post.date DESC"
+        )[0];
     }
 
     /**
@@ -289,7 +301,13 @@ class Post extends AppModel
      */
     public function getAllPosts(int $currentId, string|bool $theme, int $start, int $perpage): array
     {
-        return $this->pMapper->getArticles("post.id, post.title, post.description, post.date, post.image, post.short_text, post.theme, post.likes, post.comments, post.alias, user.login as author, user.avatar, user.id as uid, activity.liked, activity.commented", $currentId, $theme, "post.date DESC", "$start, $perpage");
+        return $this->pMapper->getArticles(
+            "post.id, post.title, post.description, post.date, post.image, post.short_text, post.theme, post.likes, post.comments, post.alias, user.login as author, user.avatar, user.id as uid, activity.liked, activity.commented",
+            $currentId,
+            $theme,
+            "post.date DESC",
+            "$start, $perpage"
+        );
     }
 
     /**
@@ -298,7 +316,13 @@ class Post extends AppModel
      */
     public function getPopularPosts(): array
     {
-        return $this->pMapper->getArticles("post.title, post.date, post.image, post.alias, user.login as author, user.avatar", false, false, "post.likes DESC", 5);
+        return $this->pMapper->getArticles(
+            "post.title, post.date, post.image, post.alias, user.login as author, user.avatar",
+            false,
+            false,
+            "post.likes DESC",
+            5
+        );
     }
 
     /**
@@ -308,6 +332,12 @@ class Post extends AppModel
      */
     public function getLikedPosts(int $currentId): array
     {
-        return $this->pMapper->getArticles("post.title, post.date, post.image, post.alias, activity.liked", $currentId, "activity.liked = 1", "post.date DESC", 5);
+        return $this->pMapper->getArticles(
+            "post.title, post.date, post.image, post.alias, activity.liked",
+            $currentId,
+            "activity.liked = 1",
+            "post.date DESC",
+            5
+        );
     }
 }

@@ -34,10 +34,10 @@ class User extends AppModel
         $this->fields['email'] = $data['email'];
         $this->fields['name'] = $data['name'];
         $this->fields['surname'] = $data['surname'];
-        $this->fields['birthday'] = $data['birthday'] !== '' ? $data['birthday']: null;
+        $this->fields['birthday'] = $data['birthday'] !== '' ? $data['birthday'] : null;
         if (isset($data['man'])) {
             $this->fields['sex'] = 'man';
-        } elseif(isset($data['woman'])) {
+        } elseif (isset($data['woman'])) {
             $this->fields['sex'] = 'woman';
         } else {
             $this->fields['sex'] = null;
@@ -47,7 +47,9 @@ class User extends AppModel
         $this->fields['phone'] = $data['phone'];
         $this->fields['author'] = $data['author'] ?? 0;
         $this->fields['likes'] = $data['likes'] ?? 0;
-        $this->fields['avatar'] = isset($data['avatar']) ? file_get_contents($data['avatar']) : file_get_contents("https://memchik.ru/images/mems/5ccaed65eab15.jpg");
+        $this->fields['avatar'] = isset($data['avatar']) ? file_get_contents($data['avatar']) : file_get_contents(
+            "https://memchik.ru/images/mems/5ccaed65eab15.jpg"
+        );
         $this->uMapper = new UserMapper(Db::instance());
     }
 
@@ -401,6 +403,6 @@ class User extends AppModel
      */
     public function updatePassword(string $newPassword, string $email): void
     {
-        $this->uMapper->updateUserField("password='$newPassword'", "email='" . $email ."'");
+        $this->uMapper->updateUserField("password='$newPassword'", "email='" . $email . "'");
     }
 }

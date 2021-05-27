@@ -5,7 +5,7 @@ namespace tools\core;
 class Pagination
 {
 
-    /** @var int current field  */
+    /** @var int current field */
     public int $currentPage;
 
     /** @var int number of posts per page */
@@ -47,7 +47,7 @@ class Pagination
         $page1left = null;
         $page2right = null;
         $page1right = null;
-        $back = "<li class='pagination__item'><a href='{$this->uri}page=". ($this->currentPage - 1) . "' class='pagination__link'><i class='fas fa-angle-left'></i></a></li>";
+        $back = "<li class='pagination__item'><a href='{$this->uri}page=" . ($this->currentPage - 1) . "' class='pagination__link'><i class='fas fa-angle-left'></i></a></li>";
         $forward = "<li class='pagination__item'><a href='{$this->uri}page=" . ($this->currentPage + 1) . "' class='pagination__link'><i class='fas fa-angle-right'></i></a></li>";
         if (($this->currentPage - 1) < 1) {
             $back = "<li class='pagination__item'><a class='pagination__link'><i class='fas fa-angle-left'></i></a></li>";
@@ -58,7 +58,7 @@ class Pagination
         if ($this->currentPage > 2) {
             $startpage = "<li class='pagination__item'><a href='{$this->uri}page=1' class='pagination__link'>1</a></li>";
         }
-        if ($this->currentPage < ($this->countPages - 1) ) {
+        if ($this->currentPage < ($this->countPages - 1)) {
             $endpage = "<li class='pagination__item'><a href='{$this->uri}page={$this->countPages}' class='pagination__link'>$this->countPages</a></li>";
         }
         if ($this->currentPage - 3 > 0) {

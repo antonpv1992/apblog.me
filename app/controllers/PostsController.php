@@ -18,7 +18,7 @@ class PostsController extends AppController
             $this->likeClick();
         }
         $title = 'Posts';
-        $query = explode('/',trim(explode('?', $_SERVER["REQUEST_URI"])[0], '/'));
+        $query = explode('/', trim(explode('?', $_SERVER["REQUEST_URI"])[0], '/'));
         $theme = $this->searchTheme($query);
         extract($this->initializationPagination($theme));
         $articles = $this->allPosts($currentId, $theme, $start, $perpage);

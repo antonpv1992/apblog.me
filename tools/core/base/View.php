@@ -5,13 +5,13 @@ namespace tools\core\base;
 class View
 {
 
-    /** @var array  */
+    /** @var array */
     public array $route = [];
 
-    /** @var bool|string  */
+    /** @var bool|string */
     public bool|string $view;
 
-    /** @var bool|string  */
+    /** @var bool|string */
     public bool|string $layout;
 
     /**
@@ -52,7 +52,7 @@ class View
             $file_layout = APP . "/views/Layouts/{$this->layout}.php";
             if (is_file($file_layout)) {
                 require $file_layout;
-            } else{
+            } else {
                 redirect('/empty');
             }
         }

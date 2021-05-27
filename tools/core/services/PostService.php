@@ -8,7 +8,7 @@ use tools\core\Pagination;
 trait PostService
 {
 
-     /**
+    /**
      * method for determining whether a post is liked or not
      * @param array $method an array containing keys
      * @param bool|string $str a string of keys to be checked in the array
@@ -17,7 +17,7 @@ trait PostService
     public function isLike(array $method, $str = false): bool
     {
         $arr = ($str !== false) ? explode(',', $str) : [];
-        foreach($arr as $value) {
+        foreach ($arr as $value) {
             if (!isset($method[trim($value)]) || !is_numeric($method[trim($value)])) {
                 return false;
             }
@@ -45,12 +45,12 @@ trait PostService
     public function searchTheme(array $query): bool|string
     {
         if (isset($_POST['query'])) {
-            setcookie("SearchQuery", $_POST['query'], time()+120);
+            setcookie("SearchQuery", $_POST['query'], time() + 120);
         }
         if (isset($_POST['query'])) {
-            return "post.title LIKE '%". hsc($_POST['query']) . "%'";
+            return "post.title LIKE '%" . hsc($_POST['query']) . "%'";
         } elseif (isset($_COOKIE["SearchQuery"]) && end($query) === 'search') {
-            return "post.title LIKE '%". hsc($_COOKIE["SearchQuery"]) . "%'";
+            return "post.title LIKE '%" . hsc($_COOKIE["SearchQuery"]) . "%'";
         } elseif (end($query) !== 'posts' && end($query) !== '') {
             return "post.theme='" . end($query) . "'";
         } else {

@@ -17,12 +17,15 @@ const COLORS = [
     7 => 'dark-blue',
     8 => 'light-green',
     9 => 'pink',
-    0 => 'purple'];
+    0 => 'purple'
+];
 
 /** class autoloading */
-spl_autoload_register(function($class) {
-    $file = ROOT . '/' . str_replace('\\', '/', $class) . '.php';
-    if (is_file($file)) {
-        require_once $file;
+spl_autoload_register(
+    function ($class) {
+        $file = ROOT . '/' . str_replace('\\', '/', $class) . '.php';
+        if (is_file($file)) {
+            require_once $file;
+        }
     }
-});
+);

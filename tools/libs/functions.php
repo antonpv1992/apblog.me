@@ -61,24 +61,81 @@ function hsc(string $str): string
  */
 function transliterate(string $text): string
 {
-    $alphabet = array (
-    "а"=>"a","б"=>"b","в"=>"v","г"=>"g","д"=>"d",
-    "е"=>"e", "ё"=>"yo","ж"=>"j","з"=>"z","и"=>"i",
-    "й"=>"i","к"=>"k","л"=>"l", "м"=>"m","н"=>"n",
-    "о"=>"o","п"=>"p","р"=>"r","с"=>"s","т"=>"t",
-    "у"=>"y","ф"=>"f","х"=>"h","ц"=>"c","ч"=>"ch",
-    "ш"=>"sh","щ"=>"sh","ы"=>"i","э"=>"e","ю"=>"u",
-    "я"=>"ya",
-    "А"=>"A","Б"=>"B","В"=>"V","Г"=>"G","Д"=>"D",
-    "Е"=>"E","Ё"=>"Yo","Ж"=>"J","З"=>"Z","И"=>"I",
-    "Й"=>"I","К"=>"K","Л"=>"L","М"=>"M","Н"=>"N",
-    "О"=>"O","П"=>"P","Р"=>"R","С"=>"S","Т"=>"T",
-    "У"=>"Y","Ф"=>"F","Х"=>"H","Ц"=>"C","Ч"=>"Ch",
-    "Ш"=>"Sh","Щ"=>"Sh","Ы"=>"I","Э"=>"E","Ю"=>"U",
-    "Я"=>"Ya",
-    "ь"=>"","Ь"=>"","ъ"=>"","Ъ"=>"",
-    "ї"=>"j","і"=>"i","ґ"=>"g","є"=>"ye",
-    "Ї"=>"J","І"=>"I","Ґ"=>"G","Є"=>"YE"
+    $alphabet = array(
+        "а" => "a",
+        "б" => "b",
+        "в" => "v",
+        "г" => "g",
+        "д" => "d",
+        "е" => "e",
+        "ё" => "yo",
+        "ж" => "j",
+        "з" => "z",
+        "и" => "i",
+        "й" => "i",
+        "к" => "k",
+        "л" => "l",
+        "м" => "m",
+        "н" => "n",
+        "о" => "o",
+        "п" => "p",
+        "р" => "r",
+        "с" => "s",
+        "т" => "t",
+        "у" => "y",
+        "ф" => "f",
+        "х" => "h",
+        "ц" => "c",
+        "ч" => "ch",
+        "ш" => "sh",
+        "щ" => "sh",
+        "ы" => "i",
+        "э" => "e",
+        "ю" => "u",
+        "я" => "ya",
+        "А" => "A",
+        "Б" => "B",
+        "В" => "V",
+        "Г" => "G",
+        "Д" => "D",
+        "Е" => "E",
+        "Ё" => "Yo",
+        "Ж" => "J",
+        "З" => "Z",
+        "И" => "I",
+        "Й" => "I",
+        "К" => "K",
+        "Л" => "L",
+        "М" => "M",
+        "Н" => "N",
+        "О" => "O",
+        "П" => "P",
+        "Р" => "R",
+        "С" => "S",
+        "Т" => "T",
+        "У" => "Y",
+        "Ф" => "F",
+        "Х" => "H",
+        "Ц" => "C",
+        "Ч" => "Ch",
+        "Ш" => "Sh",
+        "Щ" => "Sh",
+        "Ы" => "I",
+        "Э" => "E",
+        "Ю" => "U",
+        "Я" => "Ya",
+        "ь" => "",
+        "Ь" => "",
+        "ъ" => "",
+        "Ъ" => "",
+        "ї" => "j",
+        "і" => "i",
+        "ґ" => "g",
+        "є" => "ye",
+        "Ї" => "J",
+        "І" => "I",
+        "Ґ" => "G",
+        "Є" => "YE"
     );
     $symbols = ["-", "_", "/", "\\", "@", "$", "^", "&", "*", "~", "`"];
     return str_ireplace($symbols, "-", strtr($text, $alphabet));
@@ -91,9 +148,17 @@ function transliterate(string $text): string
  */
 function generateAlias(string $text): string
 {
-    return strtolower(implode("-", array_filter(explode(' ', transliterate($text)), function($key){
-        return $key !== "-";
-    })));
+    return strtolower(
+        implode(
+            "-",
+            array_filter(
+                explode(' ', transliterate($text)),
+                function ($key) {
+                    return $key !== "-";
+                }
+            )
+        )
+    );
 }
 
 /**
@@ -170,7 +235,7 @@ function generatePassword(): string
     $numbers = 0;
     $letters = 0;
     $length = 0;
-    while ($length <= $min_length OR $numbers <= $min_numbers OR $letters <= $min_letters) {
+    while ($length <= $min_length or $numbers <= $min_numbers or $letters <= $min_letters) {
         $length += 1;
         $type = rand(1, 3);
         if ($type == 1) {
@@ -227,7 +292,9 @@ function outputTable($color = false): void
         }
         echo '<td class="content__table-col">';
         for ($j = 1; $j <= 10; $j++) {
-            echo ($color ?  getColor($i) . ' x ' . getColor($j) . ' = ' . getColor($i * $j) . '<br>' : $i . ' x ' . $j . ' = ' . $i * $j . '<br>');
+            echo($color ? getColor($i) . ' x ' . getColor($j) . ' = ' . getColor(
+                    $i * $j
+                ) . '<br>' : $i . ' x ' . $j . ' = ' . $i * $j . '<br>');
         }
         echo '</td>';
     }
