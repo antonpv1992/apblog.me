@@ -1,17 +1,17 @@
-<?php 
+<?php
 
 namespace tools\core\services;
 
 use app\models\Contact;
 use app\models\User;
 
-trait RegistrationService 
+trait RegistrationService
 {
-    
+
     /**
      * method for outputting existing users by ajax
      */
-    protected function dataExists(): void
+    public function dataExists(): void
     {
         $uModel = new User([]);
         $users = $uModel->getLoginAndEmail();
@@ -28,7 +28,7 @@ trait RegistrationService
      * method for user registration
      * @param array $data registration data array
      */
-    protected function registrationUser(array $data): void
+    public function registrationUser(array $data): void
     {
         $user = new User($data, false);
         $user = $user->saveUser();

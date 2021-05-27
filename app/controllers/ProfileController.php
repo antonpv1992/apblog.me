@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use app\models\User;
 use tools\core\services\UserService;
 
 class ProfileController extends AppController
@@ -15,9 +14,8 @@ class ProfileController extends AppController
      */
     public function indexAction(): void
     {
-        $userObj = new User([]);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->changeUserData($userObj);
+            $this->changeUserData();
         }
         $title = "Profile";
         $alias = explode('/', trim($_SERVER["REQUEST_URI"], '/'));
@@ -25,12 +23,12 @@ class ProfileController extends AppController
         if (end($alias) === 'profile' && isset($_SESSION['user'])) {
             $alias = strtolower($_SESSION['user']['login']);
             $isAuth = true;
-        } elseif ($userObj->aliasExists(end($alias))) {
+        } elseif ($this->isUserByLogin(end($alias))) {
             $alias = end($alias);
         } else {
             redirect('/empty');
         }
-        $user = $userObj->getByLogin($alias);
+        $user = $this->getUserByLogin($alias);//$userObj->getByLogin($alias);
         $this->set(compact('title', 'user', 'alias', 'isAuth'));
     }
 }

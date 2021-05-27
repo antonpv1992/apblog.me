@@ -3,16 +3,18 @@
 namespace tools\core\services;
 
 use app\models\Post;
+use tools\core\Pagination;
 
 trait PostService
 {
+
      /**
      * method for determining whether a post is liked or not
      * @param array $method an array containing keys
      * @param bool|string $str a string of keys to be checked in the array
      * @return bool returns true if all keys contain valid data
      */
-    protected function isLike(array $method, $str = false): bool
+    public function isLike(array $method, $str = false): bool
     {
         $arr = ($str !== false) ? explode(',', $str) : [];
         foreach($arr as $value) {
@@ -25,13 +27,13 @@ trait PostService
 
     /**
      * method for writing like in the author db and post db
-     * @param Post $postObj post model object
      */
-    protected function likeClick(Post $postObj): void
+    public function likeClick(): void
     {
+        $post = new Post([]);
         $_POST['user'] = $_SESSION['user']['id'];
-        if ($postObj->postAndAuthorExists()) {
-            $postObj->toggleLike($_POST);
+        if ($post->postAndAuthorExists()) {
+            $post->toggleLike($_POST);
         }
     }
 
@@ -40,7 +42,7 @@ trait PostService
      * @param array $query query string split into an array
      * @return bool|string correct request or false
      */
-    protected function searchTheme(array $query): bool|string
+    public function searchTheme(array $query): bool|string
     {
         if (isset($_POST['query'])) {
             setcookie("SearchQuery", $_POST['query'], time()+120);
@@ -54,5 +56,101 @@ trait PostService
         } else {
             return false;
         }
+    }
+
+    /**
+     * method that returns the correct post by alias
+     * @param string|int $currentId id
+     * @param string $alias alias
+     * @return Post current post
+     */
+    public function getCurrentPost(string|int $currentId, string $alias): Post
+    {
+        $post = new Post([]);
+        return $post->getSinglePost($currentId, $alias);
+    }
+
+    /**
+     * method for checking whether a post exists
+     * @param string|int $currentId id
+     * @param string $alias alias
+     * @return bool true if exists
+     */
+    public function postExists(string|int $currentId, string $alias): bool
+    {
+        $post = new Post([]);
+        return $post->postExists($currentId, $alias);
+    }
+
+    /**
+     * method to initialize pagination
+     * @param string|bool $theme theme
+     * @return array pagination and options
+     */
+    public function initializationPagination(string|bool $theme): array
+    {
+        $total = $this->postsCount($theme);
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $perpage = 1;
+        $pagination = new Pagination($page, $perpage, $total);
+        $start = $pagination->getStart();
+        $currentId = isset($_SESSION['user']) ? $_SESSION['user']['id'] : 0;
+        return compact('pagination', 'total', 'page', 'perpage', 'start', 'currentId');
+    }
+
+    /**
+     * method that returns the number of posts
+     * @param string|bool $theme theme
+     * @return int|string number of posts
+     */
+    public function postsCount(string|bool $theme): int|string
+    {
+        $post = new Post([]);
+        return $post->postOnPages($theme);
+    }
+
+    /**
+     * method that returns all posts by condition
+     * @param int|string $currentId id
+     * @param string|bool $theme theme
+     * @param int|string $start start(for pagination)
+     * @param int|string $perpage number of posts on page(for pagination)
+     * @return array posts
+     */
+    public function allPosts(int|string $currentId, string|bool $theme, int|string $start, int|string $perpage): array
+    {
+        $post = new Post([]);
+        return $post->getAllPosts($currentId, $theme, $start, $perpage);
+    }
+
+    /**
+     * the method returns popular posts
+     * @return array posts
+     */
+    public function popularsPosts(): array
+    {
+        $post = new Post([]);
+        return $post->getPopularPosts();
+    }
+
+    /**
+     * method returns liked posts
+     * @param int|string $currentId id
+     * @return array posts
+     */
+    public function likedPosts(int|string $currentId): array
+    {
+        $post = new Post([]);
+        return $post->getLikedPosts($currentId);
+    }
+
+    /**
+     * method that returns the top author
+     * @return array authors
+     */
+    public function topAuthors(): array
+    {
+        $user = new \app\models\User([]);
+        return $user->getTopAuthors();
     }
 }

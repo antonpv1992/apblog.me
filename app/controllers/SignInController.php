@@ -3,7 +3,6 @@
 namespace app\controllers;
 
 use tools\core\FormValidation;
-use app\models\User;
 use tools\core\services\LoginService;
 
 class SignInController extends AppController
@@ -28,8 +27,7 @@ class SignInController extends AppController
             ) {
                 $error = FormValidation::entry(['login' => hsc($_POST['login']), 'password' => hsc($_POST['password'])]);
                 if ($error === '') {
-                    $uModel = new User([]);
-                    $user = $uModel->getSingleUser($_POST['login']);
+                    $user = $this->getUserByLogin($_POST['login']);
                     $_SESSION['user'] = $user->getAllFields();
                     if (isset($_POST['remember'])) {
                         setcookie("user", json_encode($user->getAllFields(), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK), time() + (86400 * 7));
@@ -53,10 +51,9 @@ class SignInController extends AppController
         }
         $title = 'Remember';
         $error = '';
-        $user = new User([]);
         if (isset($_POST['forgot'])) {
-            if ($user->isEmail(hsc($_POST['forgot']))) {
-                $this->sendLetter($user, $_POST['forgot']);
+            if ($this->isEmailExists(hsc($_POST['forgot']))) {
+                $this->sendLetter($_POST['forgot']);
             } else {
                 $error = "<p class='form-input__error'>Пользователя с таким email не существует!</p>";
             }
