@@ -3,9 +3,12 @@
 namespace app\controllers;
 
 use tools\core\FormValidation;
+use tools\core\services\RegistrationService;
 
 class RegistrationController extends AppController
 {
+
+    use RegistrationService;
 
     /**
      *main page Registration

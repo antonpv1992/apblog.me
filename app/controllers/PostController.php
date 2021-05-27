@@ -5,9 +5,12 @@ namespace app\controllers;
 use tools\core\Db;
 use tools\core\mappers\PostMapper;
 use tools\core\mappers\UserMapper;
+use tools\core\services\PostService;
 
 class PostController extends AppController
 {
+
+    use PostService;
 
     /**
      * main page Post

@@ -5,9 +5,12 @@ namespace app\controllers;
 use tools\core\Db;
 use tools\core\mappers\ContactMapper;
 use tools\core\mappers\UserMapper;
+use tools\core\services\UserService;
 
 class ProfileController extends AppController
 {
+
+    use UserService;
 
     /**
      * main page Profile

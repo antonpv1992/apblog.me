@@ -6,9 +6,12 @@ use tools\core\Db;
 use tools\core\mappers\PostMapper;
 use tools\core\mappers\UserMapper;
 use tools\core\Pagination;
+use tools\core\services\PostService;
 
 class PostsController extends AppController
 {
+
+    use PostService;
 
     /**
      * main page Posts
